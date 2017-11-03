@@ -39,15 +39,7 @@ class Dashboard extends Component {
             <div className="content">
                 <Grid fluid>
                     <Row>
-                        <Col lg={3} sm={6}>
-                            <StatsCard
-                                bigIcon={<i className="pe-7s-server text-warning"></i>}
-                                statsText="Capacity"
-                                statsValue="105GB"
-                                statsIcon={<i className="fa fa-refresh"></i>}
-                                statsIconText="Updated now"
-                            />
-                        </Col>
+
                         <Col lg={3} sm={6}>
                             <StatsCard
                                 bigIcon={<i className="pe-7s-wallet text-success"></i>}
