@@ -11,6 +11,7 @@ import Footer from 'components/Footer/Footer';
 import Sidebar from 'components/Sidebar/Sidebar';
 
 import {style} from "variables/Variables.jsx";
+import imagine from 'assets/img/bg.png';
 
 import appRoutes from 'routes/app.jsx';
 
@@ -93,12 +94,16 @@ class App extends Component {
         }
     }
     render() {
+      const Background = {
+          backgroundImage: 'url(' + imagine + ')'
+      };
+
         return (
 
                 <div className="wrapper">
                     <NotificationSystem ref="notificationSystem" style={style}/>
                     <Sidebar {...this.props} />
-                    <div id="main-panel" className="main-panel">
+                    <div id="main-panel" className="main-panel" style={Background}>
                         <Header {...this.props}/>
                             <Switch>
                                 {
