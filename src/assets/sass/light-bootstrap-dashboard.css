@@ -1733,7 +1733,6 @@ body > .navbar-collapse[data-color="purple"]:after {
   .card .image {
     width: 100%;
     overflow: hidden;
-    height: 260px;
     border-radius: 4px 4px 0 0;
     position: relative;
     -webkit-transform-style: preserve-3d;
@@ -1789,8 +1788,6 @@ body > .navbar-collapse[data-color="purple"]:after {
     color: #333333;
     font-weight: 300; }
   .card .avatar {
-    width: 50px;
-    height: 50px;
     overflow: hidden;
     margin-right: 5px; }
   .card .description {
@@ -1861,7 +1858,6 @@ body > .navbar-collapse[data-color="purple"]:after {
 
 .card-user .avatar {
   width: 50%;
-  height: 30%;
   border: 5px solid #FFFFFF;
   position: relative;
   margin-bottom: 15px; }

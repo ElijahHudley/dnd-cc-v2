@@ -57,7 +57,7 @@ export class UserCard extends Component{
                             <h4 className="title">
                                 {this.props.name}
                                 <br />
-                                <small>{this.props.aliment} {this.props.charClass}</small>
+                                <small>{this.props.aliment} / {this.props.charClass}</small>
                             </h4>
                         </a>
                     </div>
@@ -94,14 +94,6 @@ export class UserCard extends Component{
                     <button className="arrow rightArrow btn btn-fill" onClick={() => this.selectedImageRight()}>
                       <i className="fa fa-arrow-right" aria-hidden="true"></i>
                     </button>
-                </div>
-
-                <hr />
-
-                <div className="selectStats">
-                  <ButtonGroup vertical block>
-                    <Button>View Stats</Button>
-                  </ButtonGroup>
                 </div>
 
                 <hr />
