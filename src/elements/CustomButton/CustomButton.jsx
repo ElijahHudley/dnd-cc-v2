@@ -16,11 +16,8 @@ class CustomButton extends Component {
         });
 
         return (
-            <Button
-                className={btnClasses}
-                {...rest}
-            />
-        );
+            <Button className={btnClasses} {...rest}/>
+          );
   }
 }
 

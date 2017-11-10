@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import { ButtonGroup, Button } from 'react-bootstrap';
 
 export class UserCard extends Component{
   constructor(props){
@@ -57,16 +57,33 @@ export class UserCard extends Component{
                             <h4 className="title">
                                 {this.props.name}
                                 <br />
-                                <small>{this.props.userName}</small>
+                                <small>{this.props.aliment} {this.props.charClass}</small>
                             </h4>
                         </a>
                     </div>
                     <p className="description text-center">
                         {this.props.description}
                     </p>
+
+                    <p className="description text-center">
+                    <i className="fa fa-shield" aria-hidden="true"></i>
+                    &nbsp; armorClass: {this.props.armorClass}</p>
+
+                    <p className="description text-center">
+                    <i className="fa fa-paper-plane" aria-hidden="true"></i>
+                    &nbsp; initiative: {this.props.initiative}</p>
+
+                    <p className="description text-center">
+                    <i className="fa fa-fast-forward" aria-hidden="true"></i>
+                    &nbsp; speed: {this.props.speed}</p>
+
+                    <p className="description text-center">
+                    <i className="fa fa-medkit" aria-hidden="true"></i>
+                    &nbsp; hitPoints: {this.props.hitPoints}</p>
                 </div>
 
                 <hr />
+
                 <div className="selectImage">
                   <button className="arrow leftArrow btn btn-fill" onClick={() => this.selectedImageLeft()}>
                     <i className="fa fa-arrow-left" aria-hidden="true"></i>
@@ -78,6 +95,15 @@ export class UserCard extends Component{
                       <i className="fa fa-arrow-right" aria-hidden="true"></i>
                     </button>
                 </div>
+
+                <hr />
+
+                <div className="selectStats">
+                  <ButtonGroup vertical block>
+                    <Button>View Stats</Button>
+                  </ButtonGroup>
+                </div>
+
                 <hr />
 
                 <div className="text-center">

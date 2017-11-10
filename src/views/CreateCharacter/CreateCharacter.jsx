@@ -5,13 +5,16 @@ import {
   Col,
   FormGroup,
   ControlLabel,
-  FormControl
+  FormControl,
+  DropdownButton,
+  MenuItem
 } from 'react-bootstrap';
 
 import {Card} from 'components/Card/Card.jsx';
 import {FormInputs} from 'components/FormInputs/FormInputs.jsx';
 import {UserCard} from 'components/UserCard/UserCard.jsx';
 import Button from 'elements/CustomButton/CustomButton.jsx';
+import DropDown from 'elements/CustomDropDown/CustomDropDown.jsx';
 
 import bgImage from "assets/img/bg04.jpg";
 import avatar from "assets/img/color/Aarin.bmp";
@@ -22,17 +25,48 @@ function importAll(r) {return r.keys().map(r);}
 const images = importAll(require.context('assets/img/color', false, /\.(bmp|png|jpe?g|svg)$/));
 
 class CreateCharacter extends Component {
-
   constructor(props) {
+    console.log('props', props);
     super(props);
 
     this.state = {
-      image: avatar
+      name: "Mike Andrew",
+      charClass: '',
+      aliment: '',
+      image: avatar,
+      armorClass: 0,
+      initiative: 0,
+      speed: 0 ,
+      hitPoints: 0
     };
+
+    this.Name = this.state.name;
   }
 
   setImage(index) {
     this.setState({image: images[index]});
+  }
+
+  handleNameChange(evt){
+    console.log('handleChange', evt);
+    console.log('handleChange', evt.target.value);
+    this.setState({name: evt.target.value});
+  }
+
+  handleClassChange(evt){
+    console.log('handleChange', evt.target.value);
+    this.setState({name: evt.target.value});
+  }
+
+
+  handleAlimentChange(evt){
+    console.log('handleChange', evt.target.value);
+    this.setState({name: evt.target.value});
+  }
+
+
+  updateCharacter(ev){
+    console.log('updateCharacter', ev, this.refs);
   }
 
   render() {
@@ -40,97 +74,121 @@ class CreateCharacter extends Component {
       <Grid fluid="fluid">
         <Row>
           <Col md={8}>
-            <Card title="Edit Profile" content={<form > <FormInputs ncols={["col-md-5", "col-md-3", "col-md-4"]} proprieties={[
+            <Card title="Character Profile" content={<form>
+              <FormInputs ncols={["col-md-3", "col-md-3", "col-md-3", "col-md-2"]} proprieties={[
                   {
-                    label: "Company (disabled)",
+                    label: "Name",
                     type: "text",
                     bsClass: "form-control",
-                    placeholder: "Company",
-                    defaultValue: "Creative Code Inc.",
-                    disabled: true
+                    placeholder: "Name",
+                    disabled: false,
+                    onChange: this.handleNameChange.bind(this)
                   }, {
-                    label: "Username",
+                    label: "Background",
                     type: "text",
                     bsClass: "form-control",
-                    placeholder: "Username",
-                    defaultValue: "michael23"
+                    placeholder: "Background",
                   }, {
-                    label: "Email address",
-                    type: "email",
-                    bsClass: "form-control",
-                    placeholder: "Email"
-                  }
-                ]}/>
-              <FormInputs ncols={["col-md-6", "col-md-6"]} proprieties={[
-                  {
-                    label: "First name",
+                    label: "Faction",
                     type: "text",
                     bsClass: "form-control",
-                    placeholder: "First name",
-                    defaultValue: "Mike"
+                    placeholder: "Merc"
                   }, {
-                    label: "Last name",
-                    type: "text",
-                    bsClass: "form-control",
-                    placeholder: "Last name",
-                    defaultValue: "Andrew"
-                  }
-                ]}/>
-              <FormInputs ncols={["col-md-12"]} proprieties={[{
-                    label: "Adress",
-                    type: "text",
-                    bsClass: "form-control",
-                    placeholder: "Home Adress",
-                    defaultValue: "Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09"
-                  }
-                ]}/>
-              <FormInputs ncols={["col-md-4", "col-md-4", "col-md-4"]} proprieties={[
-                  {
-                    label: "City",
-                    type: "text",
-                    bsClass: "form-control",
-                    placeholder: "City",
-                    defaultValue: "Mike"
-                  }, {
-                    label: "Country",
-                    type: "text",
-                    bsClass: "form-control",
-                    placeholder: "Country",
-                    defaultValue: "Andrew"
-                  }, {
-                    label: "Postal Code",
+                    label: "Level",
                     type: "number",
                     bsClass: "form-control",
-                    placeholder: "ZIP Code"
+                    placeholder: "1"
                   }
                 ]}/>
 
-              <Row>
-                <Col md={12}>
-                  <FormGroup controlId="formControlsTextarea">
-                    <ControlLabel>About Me</ControlLabel>
-                    <FormControl rows="5" componentClass="textarea" bsClass="form-control" placeholder="Here can be your description" defaultValue="Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo."/>
-                  </FormGroup>
-                </Col>
-              </Row>
-              <Button bsStyle="info" pullRight="pullRight" fill="fill" type="submit">
+              <FormInputs ncols={["col-md-3", "col-md-3", "col-md-3"]} proprieties={[
+                  {
+                    label: "Race",
+                    type: "text",
+                    bsClass: "form-control",
+                    placeholder: "Race",
+                  }, {
+                    label: "EXP Points",
+                    type: "Number",
+                    bsClass: "form-control",
+                    placeholder: "EXP Points"
+                  }, {
+                    label: "DCI Number",
+                    type: "Number",
+                    bsClass: "form-control",
+                    placeholder: "DCI Number"
+                  }
+                ]}/>
+
+                <Row>
+                  <Col md={4}>
+                    <DropDown onSelect={() => this.handleAlimentChange.bind(this)} Items={["Lawful good", "Neutral good", "Chaotic good", "Lawful neutral", "(True) neutral", "Chaotic neutral", "Lawful evil", "Neutral evil", "Chaotic evil"]} Title="Aliment"/>
+                  </Col>
+
+                  <Col md={4}>
+                    <DropDown onSelect={() => this.handleClassChange.bind(this)} Items={['Barbarian','Bard','Cleric','Druid','Fighter','Monk','Paladin','Ranger','Rogue','Sorcerer','Warlock','Wizard','Custom']} Title="Class"/>
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col md={4}>
+                    <FormGroup controlId="formControlsTextarea">
+                      <ControlLabel>Personality</ControlLabel>
+                      <FormControl rows="5" componentClass="textarea" bsClass="form-control" placeholder=""/>
+                    </FormGroup>
+                  </Col>
+
+                  <Col md={4}>
+                    <FormGroup controlId="formControlsTextarea">
+                      <ControlLabel>Bonds</ControlLabel>
+                      <FormControl rows="5" componentClass="textarea" bsClass="form-control" placeholder=""/>
+                    </FormGroup>
+                  </Col>
+
+                  <Col md={4}>
+                    <FormGroup controlId="formControlsTextarea">
+                      <ControlLabel>Flaws</ControlLabel>
+                      <FormControl rows="5" componentClass="textarea" bsClass="form-control" placeholder=""/>
+                    </FormGroup>
+                  </Col>
+                </Row>
+
+              <Button onClick={() => this.updateCharacter()} bsStyle="info" pullRight={true} fill={true} type="submit">
                 Update Profile
               </Button>
+
               <div className="clearfix"></div>
             </form>}/>
+
           </Col>
           <Col md={4}>
-            <UserCard bgImage={bgImage} avatar={this.state.image} images={images} setImage={(index) => this.setImage(index)} name="Mike Andrew" userName="michael24" description={<span > "Lamborghini Mercy
- < br /> Your chick she so thirsty < br /> I 'm in that two seat Lambo"
- < /span>} socials={<div > <Button simple="simple">
-                <i className="fa fa-facebook-square"></i>
-              </Button>
-              <Button simple="simple">
-                <i className="fa fa-twitter"></i>
-              </Button>
-              <Button simple="simple">
-                <i className="fa fa-google-plus-square"></i>
-              </Button>
+            <UserCard
+              bgImage={bgImage}
+              avatar={this.state.image}
+              images={images}
+              setImage={(index) => this.setImage(index)}
+              name={this.state.name}
+              charClass={this.state.charClass}
+              aliment={this.state.aliment}
+              name={this.state.name}
+              armorClass={this.state.armorClass}
+              initiative={this.state.initiative}
+              speed={this.state.speed}
+              hitPoints={this.state.hitPoints}
+              description={<span> "I'm in that two seat Lambo" </span>}
+              socials={
+                <div>
+                <Button simple="simple">
+                  <i className="fa fa-facebook-square"></i>
+                </Button>
+
+                <Button simple="simple">
+                  <i className="fa fa-twitter"></i>
+                </Button>
+
+                <Button simple="simple">
+                  <i className="fa fa-google-plus-square"></i>
+                </Button>
             </div>}/>
           </Col>
 

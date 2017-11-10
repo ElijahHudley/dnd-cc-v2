@@ -701,6 +701,9 @@ body > .navbar-collapse[data-color="purple"]:after {
   opacity: 0.5;
   filter: alpha(opacity=50); }
 
+.btn-block {
+  padding: 5%; }
+
 .btn-round {
   border-width: 1px;
   border-radius: 30px !important;

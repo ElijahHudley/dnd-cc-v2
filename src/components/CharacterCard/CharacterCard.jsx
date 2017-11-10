@@ -10,7 +10,6 @@ export class CharacterCard extends Component{
 
     render(){
         return (
-
             <div className={"card card-stats"}  onClick={() => this.props.ClickEvent()}>
                 <div className={"content "  + this.props.cardClass}>
                     <Row>
