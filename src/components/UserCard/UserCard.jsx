@@ -2,6 +2,48 @@ import React, { Component } from 'react';
 
 
 export class UserCard extends Component{
+  constructor(props){
+    super(props);
+
+    this.state = {
+      selectedImage: 0
+    };
+  }
+
+  selectedImageLeft(){
+    console.log('selectedImageLeft');
+    var index = this.state.selectedImage;
+    index = index - 1;
+
+    if(index <= 0){
+      index = 0;
+    }
+
+    this.setState({
+      selectedImage: index
+    });
+
+    this.props.setImage(index);
+  }
+
+  selectedImageRight(){
+    console.log('selectedImageRight');
+    var images = this.props.images;
+    var index = this.state.selectedImage;
+    index = index + 1;
+
+    if(index >= images.length){
+      index = images.length - 1;
+    }
+
+    this.setState({
+      selectedImage: index
+    });
+
+    this.props.setImage(index);
+  }
+
+
     render(){
         return (
             <div className="card card-user">
@@ -23,7 +65,21 @@ export class UserCard extends Component{
                         {this.props.description}
                     </p>
                 </div>
+
                 <hr />
+                <div className="selectImage">
+                  <button className="arrow leftArrow btn btn-fill" onClick={() => this.selectedImageLeft()}>
+                    <i className="fa fa-arrow-left" aria-hidden="true"></i>
+                    </button>
+
+                    <span className="counter"> {this.state.selectedImage + 1} / {this.props.images.length}</span>
+
+                    <button className="arrow rightArrow btn btn-fill" onClick={() => this.selectedImageRight()}>
+                      <i className="fa fa-arrow-right" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <hr />
+
                 <div className="text-center">
                     {this.props.socials}
                 </div>

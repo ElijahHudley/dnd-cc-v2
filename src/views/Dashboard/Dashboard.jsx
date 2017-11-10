@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import ChartistGraph from 'react-chartist';
 import { Grid, Row, Col } from 'react-bootstrap';
+import { withRouter } from 'react-router-dom';
 
 
 import {Card} from 'components/Card/Card.jsx';
-import {StatsCard} from 'components/StatsCard/StatsCard.jsx';
+import {CharacterCard} from 'components/CharacterCard/CharacterCard.jsx';
 import {Tasks} from 'components/Tasks/Tasks.jsx';
 import {
     dataPie,
@@ -20,6 +21,14 @@ import {
 } from 'variables/Variables.jsx';
 
 class Dashboard extends Component {
+  constructor(props){
+    super(props);
+
+    this.state = {
+      Characters: ['this1', 'this2']
+    };
+  }
+
     createLegend(json){
         var legend = [];
         for(var i = 0; i < json["names"].length; i++){
@@ -34,31 +43,43 @@ class Dashboard extends Component {
         }
         return legend;
     }
+
+    HandleClickEvent(){
+      console.log('HANDLED CLICK');
+      this.props.history.push(`/Create`);
+    }
+
     render() {
         return (
             <div className="content">
                 <Grid fluid>
                     <Row>
                         <Col lg={3} sm={6}>
-                        <StatsCard
+                        <CharacterCard
+                            ClickEvent={() => this.HandleClickEvent()}
                             cardClass={"add-new"}
                             cardBigIcon={<i className="fa fa-plus text-warning"></i>}
                             cardText="Create New Character"
                             cardValue=""
                             cardSmallIcon={<i className="fa fa-plus"></i>}
-                            statsIconText={'sssss'}
-                        />
+                            statsIconText={''}
+                            CharacterName={''}
+                            CharacterClass={''}
+                            CharacterLevel={''}/>
                         </Col>
 
-                        <Col lg={3} sm={6}>
-                        <StatsCard
-                            cardBigIcon={<i className="fa fa-user text-warning"></i>}
-                            cardText="Character"
-                            cardValue=""
-                            cardSmallIcon={<i className="fa fa-user"></i>}
-                            statsIconText={'sssss'}
-                        />
-                        </Col>
+                        {this.state.Characters.map((item, i) =>
+                          <div id={i}>
+                            <Col lg={3} sm={6}>
+                              <CharacterCard
+                                cardBigIcon={<i className="fa fa-user text-warning"></i>}
+                                cardText="Character"
+                                cardValue={i}
+                                cardSmallIcon={<i className="fa fa-user"></i>}
+                                statsIconText={item}/>
+                            </Col>
+                          </div>
+                        )}
                     </Row>
                 </Grid>
             </div>

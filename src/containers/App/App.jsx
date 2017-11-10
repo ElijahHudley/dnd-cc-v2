@@ -80,7 +80,7 @@ class App extends Component {
             title: (<span data-notify="icon" className="pe-7s-gift"></span>),
             message: (
                 <div>
-                    Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for every web developer.
+                    This is the Dungeons and Dragons character Creator
                 </div>
             ),
             level: level,
@@ -97,6 +97,7 @@ class App extends Component {
       const Background = {
           backgroundImage: 'url(' + imagine + ')'
       };
+
 
         return (
 
@@ -120,6 +121,7 @@ class App extends Component {
                                                        />}
                                                 />
                                             );
+
                                         if(prop.redirect)
                                             return (
                                                 <Redirect from={prop.path} to={prop.to} key={key}/>
