@@ -13,6 +13,10 @@ import {
 
 import {Card} from 'components/Card/Card.jsx';
 import CharacterStats from './CharacterStats.jsx';
+import CharacterAbilities from './CharacterAbilities.jsx';
+import CharacterInventory from './CharacterInventory.jsx';
+import CharacterProfile from './CharacterProfile.jsx';
+
 import {FormInputs} from 'components/FormInputs/FormInputs.jsx';
 import {UserCard} from 'components/UserCard/UserCard.jsx';
 import Button from 'elements/CustomButton/CustomButton.jsx';
@@ -34,6 +38,7 @@ class CreateCharacter extends Component {
     super(props);
 
     this.state = {
+      character : {
       name: "Hiro Yakamora",
       charClass: 'Barbarian',
       aliment: 'Lawful good',
@@ -42,8 +47,9 @@ class CreateCharacter extends Component {
       initiative: 0,
       speed: 0,
       hitPoints: 0,
+      proficencyBonus: 2,
       level: 1,
-      background: '',
+      backgroundStory: 'Bad Guy',
       faction: '',
       race: 'Dragonborn',
       exp: 0,
@@ -80,10 +86,11 @@ class CreateCharacter extends Component {
         intimidation: 0,
         performance: 0,
         persuasion: 0
+        }
       }
     };
 
-    this.Name = this.state.name;
+    this.Name = this.state.character.name;
 
     this.charClassesInfo = {
       'Barbarian': {armorClass: 13, hitPoints: 13},
@@ -102,43 +109,112 @@ class CreateCharacter extends Component {
     }
 
     this.raceInfo = {
-      'Dragonborn': {speed: 30, bonus: {strength: 2, charisma: 1}},
-      'Dwarf': {speed: 25, bonus: {constitution: 2}},
-      'Elf': {speed: 30, bonus: {dexterity: 2}},
-      'Half-Elf': {speed: 30, bonus: {charisma: 2}},
-      'Half-Orc': {speed: 30, bonus: {strength: 2, constitution: 1}},
-      'Halfling': {speed: 25, bonus: {dexterity: 2}},
-      'Human': {speed: 30, bonus: {}},
-      'Tiefling': {speed: 30, bonus: {intelligence: 1, charisma: 2}},
-      'Gnome': {speed: 25, bonus: {intelligence: 2}},
-      'Custom': {speed: 0, bonus: {hitPoints: 0}, bonus: {}},
+      'Dragonborn': {
+        speed: 30,
+        bonus: {strength: 2, charisma: 1},
+        abilities: [{}]
+      },
+      'Dwarf': {
+        speed: 25,
+        bonus: {constitution: 2},
+        abilities: [{'Darkvision':'60 Feet'}]
+      },
+      'Elf': {
+        speed: 30,
+        bonus: {dexterity: 2},
+        abilities: ['']
+      },
+      'Half-Elf': {
+        speed: 30,
+        bonus: {charisma: 2},
+        abilities: ['']
+      },
+      'Half-Orc': {
+        speed: 30,
+        bonus: {strength: 2, constitution: 1},
+        abilities: [{'Darkvision':'60 Feet'}]
+      },
+      'Halfling': {
+        speed: 25,
+        bonus: {dexterity: 2},
+        abilities: ['']
+      },
+      'Human': {
+        speed: 30,
+        bonus: {},
+        abilities: ['']
+      },
+      'Tiefling': {
+        speed: 30,
+        bonus: {intelligence: 1, charisma: 2},
+        abilities: [{'Darkvision':'60 Feet'}]
+      },
+      'Gnome': {
+        speed: 25,
+        bonus: {intelligence: 2},
+        abilities: ['']
+      },
+      'Custom': {
+        speed: 0,
+        bonus: {hitPoints: 0}, bonus: {},
+        abilities: ['']
+      }
     }
   }
 
   setImage(index) {
-    this.setState({image: images[index]});
+    var character = this.state.character;
+    character.image = images[index];
+
+    this.updateCharacter(character);
   }
 
   handleNameChange(evt) {
     console.log('handleNameChange', evt.target.value);
-    this.setState({name: evt.target.value});
+    var character = this.state.character;
+    character.name = evt.target.value;
+
+    this.updateCharacter(character);
+  }
+
+  handleLevelChange(evt) {
+    var self = this;
+    var level = evt.target.value;
+    var bonus = 2;
+
+    if(level <= 0){bonus = 0;}
+    if(level > 4){bonus = 3;}
+    if(level > 8){bonus = 4;}
+    if(level > 12){bonus = 5;}
+    if(level > 16){bonus = 6;}
+
+    console.log('handleLevelChange', level, 'bonus', bonus);
+    var character = this.state.character;
+    character.proficencyBonus = bonus;
+
+    this.updateCharacter(character);
   }
 
   handleClassChange(evt) {
     var self = this;
     var selected = evt.target.value;
+    var character = this.state.character;
+    character.charClass = selected;
+    character.armorClass = this.charClassesInfo[selected].armorClass;
+    character.hitPoints = this.charClassesInfo[selected].hitPoints;
     console.log('handleClassChange', selected);
-    this.setState({charClass: selected});
-    self.setState({armorClass: this.charClassesInfo[selected].armorClass});
-    self.setState({hitPoints: this.charClassesInfo[selected].hitPoints});
+
+    this.updateCharacter(character);
   }
 
   handleRaceChange(evt) {
     var self = this;
     var selected = evt.target.value;
+    var character = this.state.character;
+    character.race = selected;
+    character.speed = this.raceInfo[selected].speed;
+
     console.log('handleRaceChange', selected);
-    this.setState({race: selected});
-    self.setState({speed: this.raceInfo[selected].speed});
 
     var savingThrows = {
       strength: 0,
@@ -151,176 +227,150 @@ class CreateCharacter extends Component {
 
     for(var c in Object.keys(this.raceInfo[selected].bonus)){
       var index = Object.keys(this.raceInfo[selected].bonus)[c];
-
       savingThrows[index] += this.raceInfo[selected].bonus[index];
-      this.setState({savingThrows : savingThrows});
+      character.savingThrows = savingThrows;
     }
 
-
+    this.updateCharacter(character);
   }
 
+  reRollSavingThrows(){
+    var bonuses = this.raceInfo[this.state.character.race].bonus;
+
+    function getCummTotal(){
+      var die1 = Math.floor(Math.random() * (6 - 1) + 1);
+      var die2 = Math.floor(Math.random() * (6 - 1) + 1);
+      var die3 = Math.floor(Math.random() * (6 - 1) + 1);
+      var die4 = Math.floor(Math.random() * (6 - 1) + 1);
+      var cummTotal = [die1,die2,die3,die4];
+
+      var low = Math.min.apply(null, cummTotal);
+
+      function getSum(total, num) {
+          return total + num;
+      }
+
+      for(var c in cummTotal){
+        if(cummTotal[c] === low){
+          cummTotal.slice(c, 1);
+          break;
+        }
+      }
+
+      cummTotal = cummTotal.reduce(getSum);
+      return cummTotal;
+    }
+
+    var savingThrows = {
+      strength: getCummTotal() + (bonuses.strength ? bonuses.strength : 0),
+      dexterity: getCummTotal() + (bonuses.dexterity ? bonuses.dexterity : 0),
+      constitution: getCummTotal() + (bonuses.constitution ? bonuses.constitution : 0),
+      intelligence: getCummTotal() + (bonuses.intelligence ? bonuses.intelligence : 0),
+      wisdom: getCummTotal() + (bonuses.wisdom ? bonuses.wisdom : 0),
+      charisma: getCummTotal() + (bonuses.charisma ? bonuses.charisma : 0)
+    }
+
+    console.log('reRollSavingThrows', bonuses, savingThrows);
+    var character = this.state.character;
+    character.savingThrows = savingThrows;
+
+    this.updateCharacter(character);
+  }
 
   handleAlimentChange(evt) {
     console.log('handleAlimentChange', evt.target.value);
-    this.setState({aliment: evt.target.value});
+    var character = this.state.character;
+    character.aliment = evt.target.value;
+
+    this.updateCharacter(character);
   }
 
-  updateCharacter(ev) {
+  updateCharacter(character) {
+    console.log('updateCharacter', character);
+    var character = this.state.character;
+
+    this.setState({character: character});
+  }
+
+  saveCharacter(ev) {
     console.log('updateCharacter', ev, this.refs);
+    var character = this.state.character;
+
+    this.setState({character: character});
   }
 
-  calcInitiative(dex){
-    var roll = Math.floor(Math.random() * (20 - 1) + 1 + dex);
-    this.setState({initiative: roll});
 
+  handleInitiative(val){
+    var character = this.state.character;
+    character.initiative = val;
+
+    this.updateCharacter(character);
   }
 
   render() {
-    const aliments = [
-      "Lawful good","Neutral good","Chaotic good","Lawful neutral","(True) neutral","Chaotic neutral","Lawful evil","Neutral evil","Chaotic evil"
-    ]
-
-    const classes = [
-      'Barbarian','Bard','Cleric','Druid','Fighter','Monk','Paladin','Ranger','Rogue','Sorcerer','Warlock','Wizard','Custom'
-    ]
-
-    const races = [
-      'Dragonborn',
-      'Dwarf',
-      'Elf',
-      'Gnome',
-      'Half-Elf',
-      'Half-Orc',
-      'Halfling',
-      'Human',
-      'Tiefling',
-      'Custom'
-    ]
 
     return (<div className="content">
-      <Grid fluid="fluid">
+      <Grid fluid={true}>
         <Row>
           <Col md={8}>
-            <Tabs activeKey={this.state.key} onSelect={this.handleSelect} id="controlled-tab-example">
+            <Tabs activeKey={this.state.character.key} onSelect={this.handleSelect} id="controlled-tab-example">
               <Tab eventKey={1} title="Profile">
-                <Card title="Character Profile" content={<form > <FormInputs ncols={["col-md-3", "col-md-3", "col-md-3", "col-md-2"]} proprieties={[
-                      {
-                        label: "Name",
-                        type: "text",
-                        bsClass: "form-control",
-                        placeholder: "Name",
-                        disabled: false,
-                        onChange: this.handleNameChange.bind(this)
-                      }, {
-                        label: "Background",
-                        type: "text",
-                        bsClass: "form-control",
-                        placeholder: "Background"
-                      }, {
-                        label: "Faction",
-                        type: "text",
-                        bsClass: "form-control",
-                        placeholder: "Faction"
-                      }, {
-                        label: "Level",
-                        type: "number",
-                        bsClass: "form-control",
-                        placeholder: "1"
-                      }
-                    ]}/>
 
-                  <FormInputs ncols={["col-md-3", "col-md-3"]} proprieties={[
-                      {
-                        label: "EXP Points",
-                        type: "Number",
-                        bsClass: "form-control",
-                        placeholder: "EXP Points"
-                      }, {
-                        label: "DCI Number",
-                        type: "Number",
-                        bsClass: "form-control",
-                        placeholder: "DCI Number"
-                      }
-                    ]}/>
-
-                  <Row>
-                    <Col md={4}>
-                      <DropDown handleChange={() => this.handleAlimentChange.bind(this)} Items={aliments} Title="Aliment"/>
-                    </Col>
-
-                    <Col md={4}>
-                      <DropDown handleChange={() => this.handleClassChange.bind(this)} Items={classes} Title="Class"/>
-                    </Col>
-
-                    <Col md={4}>
-                      <DropDown handleChange={() => this.handleRaceChange.bind(this)} Items={races} Title="Race"/>
-                    </Col>
-                  </Row>
-
-                  <Row>
-                    <Col md={4}>
-                      <FormGroup controlId="formControlsTextarea">
-                        <ControlLabel>Personality</ControlLabel>
-                        <FormControl rows="5" componentClass="textarea" bsClass="form-control" placeholder=""/>
-                      </FormGroup>
-                    </Col>
-
-                    <Col md={4}>
-                      <FormGroup controlId="formControlsTextarea">
-                        <ControlLabel>Bonds</ControlLabel>
-                        <FormControl rows="5" componentClass="textarea" bsClass="form-control" placeholder=""/>
-                      </FormGroup>
-                    </Col>
-
-                    <Col md={4}>
-                      <FormGroup controlId="formControlsTextarea">
-                        <ControlLabel>Flaws</ControlLabel>
-                        <FormControl rows="5" componentClass="textarea" bsClass="form-control" placeholder=""/>
-                      </FormGroup>
-                    </Col>
-                  </Row>
-
-                  <Button onClick={(dex) => this.calcInitiative(0)} bsStyle="info" pullRight={false} fill={true}>
-                    Roll For initiative
-                  </Button>
-
-                  <Button onClick={() => this.updateCharacter()} bsStyle="info" pullRight={true} fill={true} type="submit">
-                    Update Profile
-                  </Button>
-
-                  <div className="clearfix"></div>
-                </form>}/>
+              <CharacterProfile
+                character={this.state.character}
+                updateCharacter={(character) => this.updateCharacter(character)}
+                handleInitiative={(val) => this.handleInitiative(val)}
+                initiative={this.state.character.initiative}
+                handleAlimentChange={(evt) => this.handleAlimentChange(evt)}
+                handleNameChange={(evt) => this.handleNameChange(evt)}
+                handleLevelChange={(evt) => this.handleLevelChange(evt)}
+                handleClassChange={(evt) => this.handleClassChange(evt)}
+                handleRaceChange={(evt) => this.handleRaceChange(evt)}
+                savingThrows={this.state.character.savingThrows}
+                />
               </Tab>
 
               <Tab eventKey={2} title="Stats">
                 {<CharacterStats
-                  raceBonus={this.raceInfo[this.state.race]}
-                  savingThrows={this.state.savingThrows}
-                  Proficencies={this.state.skills}/>}
+                  character={this.state.character}
+                  updateCharacter={(character) => this.updateCharacter(character)}
+                  reRollSavingThrows={() => this.reRollSavingThrows()}
+                  raceBonus={this.raceInfo[this.state.character.race]}
+                  savingThrows={this.state.character.savingThrows}
+                  proficencies={this.state.character.skills}/>}
               </Tab>
 
               <Tab eventKey={3} title="Abilities">
+                {<CharacterAbilities
+                  character={this.state.character}
+                  updateCharacter={(character) => this.updateCharacter(character)}/>}
               </Tab>
 
               <Tab eventKey={4} title="Inventory">
+              {<CharacterInventory
+                character={this.state.character}
+                updateCharacter={(character) => this.updateCharacter(character)}/>}
               </Tab>
             </Tabs>
           </Col>
 
+
           <Col md={4}>
             <UserCard
               bgImage={bgImage}
-              avatar={this.state.image}
+              avatar={this.state.character.image}
               images={images}
               setImage={(index) => this.setImage(index)}
-              name={this.state.name}
-              charClass={this.state.charClass}
-              aliment={this.state.aliment}
-              armorClass={this.state.armorClass}
-              initiative={this.state.initiative}
-              speed={this.state.speed}
-              hitPoints={this.state.hitPoints}
-              description={<span> "I'm in that two seat Lambo" < /span>} socials={<div > <Button simple="simple">
+              name={this.state.character.name}
+              charClass={this.state.character.charClass}
+              aliment={this.state.character.aliment}
+              armorClass={this.state.character.armorClass}
+              initiative={this.state.character.initiative}
+              speed={this.state.character.speed}
+              hitPoints={this.state.character.hitPoints}
+              proficencyBonus={this.state.character.proficencyBonus}
+              description={<span> {this.state.character.backgroundStory} < /span>}
+              socials={<div > <Button simple="simple">
                 <i className="fa fa-facebook-square"></i>
               </Button>
 

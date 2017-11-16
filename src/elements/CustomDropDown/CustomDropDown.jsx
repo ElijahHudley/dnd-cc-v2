@@ -22,7 +22,7 @@ class CustomDropDown extends Component {
 
   render() {
     let itemOptions = this.props.Items.map((item,i) => {
-      return<option key={i} value={item}>{item}</option>
+      return<option key={i} id={i} value={item}>{item}</option>
     })
 
     const {Title, Items} = this.props;
@@ -43,7 +43,7 @@ class CustomDropDown extends Component {
                 className="form-control"
                 bsSize="lg"
                 title={this.state.title}
-                id="bg-vertical-dropdown-1"
+                id={this.props.id}
                 onChange={this.props.handleChange()}>
               {itemOptions}
               </FormControl>
@@ -52,9 +52,9 @@ class CustomDropDown extends Component {
   }
 }
 
-CustomDropDown.propTypes = {
-  Items: PropTypes.array,
-  Title: PropTypes.string
-}
+// CustomDropDown.propTypes = {
+//   Items: PropTypes.array,
+//   Title: PropTypes.string,
+// }
 
 export default CustomDropDown;

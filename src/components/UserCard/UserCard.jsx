@@ -66,20 +66,24 @@ export class UserCard extends Component{
                     </p>
 
                     <p className="description text-center">
+                    <i className="fa fa-plus" aria-hidden="true"></i>
+                    &nbsp; Proficency Bonus: {'+'+this.props.proficencyBonus}</p>
+
+                    <p className="description text-center">
                     <i className="fa fa-shield" aria-hidden="true"></i>
-                    &nbsp; armorClass: {this.props.armorClass}</p>
+                    &nbsp; Armor Class: {this.props.armorClass}</p>
 
                     <p className="description text-center">
                     <i className="fa fa-paper-plane" aria-hidden="true"></i>
-                    &nbsp; initiative: {this.props.initiative}</p>
+                    &nbsp; Initiative: {this.props.initiative}</p>
 
                     <p className="description text-center">
                     <i className="fa fa-fast-forward" aria-hidden="true"></i>
-                    &nbsp; speed: {this.props.speed}</p>
+                    &nbsp; Speed: {this.props.speed}</p>
 
                     <p className="description text-center">
                     <i className="fa fa-medkit" aria-hidden="true"></i>
-                    &nbsp; hitPoints: {this.props.hitPoints}</p>
+                    &nbsp; Hit Points: {this.props.hitPoints}</p>
                 </div>
 
                 <hr />

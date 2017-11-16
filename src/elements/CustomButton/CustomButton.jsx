@@ -23,7 +23,7 @@ class CustomButton extends Component {
 
 CustomButton.propTypes = {
     fill: PropTypes.bool,
-    simple: PropTypes.bool,
+    simple: PropTypes.string,
     pullRight: PropTypes.bool,
     block: PropTypes.bool,
     round: PropTypes.bool

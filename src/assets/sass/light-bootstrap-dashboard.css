@@ -1623,6 +1623,10 @@ body > .navbar-collapse[data-color="purple"]:after {
     padding: 10px 0px;
     margin: 10px 10px 10px 0px; }
 
+select.input-lg {
+  height: 56px;
+  line-height: 46px; }
+
 .dropdown-menu {
   visibility: hidden;
   margin: 0;

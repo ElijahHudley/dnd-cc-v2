@@ -77,7 +77,7 @@ class Dashboard extends Component {
                         </Col>
 
                         {this.state.characters.map((item, i) =>
-                          <div id={i}>
+                          <div key={i} id={i}>
                             <Col lg={3} sm={6}>
                               <CharacterCard
                                 shouldHideBtn={false}
