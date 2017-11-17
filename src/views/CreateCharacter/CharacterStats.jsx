@@ -22,61 +22,195 @@ class CharacterStats extends Component {
 
     this.state = {
       savingThrows: this.props.savingThrows,
-      skills: this.props.proficencies
+      skills: this.props.proficencies,
+      skillBonuses: {
+        type: [],
+        limit: [1,2]
+      }
     }
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+  }
+
+  componentWillReceiveProps(){
+    var item = this.getProficencies();
+    console.log('CharacterStats componentWillReceiveProps', item);
+    this.setState({skillBonuses: item});
   }
 
   componentDidMount() {
-    this.props.reRollSavingThrows();
-    this.getProficencies();
-  }
+    console.log('CharacterStats componentDidMount');
+    this.props.reRollAbilityScores();
 
-  handleBonusChange(evt) {
-    this.setState({skillBonuses: {}});
-  }
-
-  getProficencies() {
-    console.log('getProficencies', this.props.character.charClass);
-
-    switch (this.props.character.charClass) {
-      case 'Fighter':
-        break;
-      case 'Barbarian':
-        break;
-      case 'Bard':
-        break;
-      case 'Cleric':
-        break;
-      case 'Druid':
-        break;
-      case 'Fighter':
-        break;
-      case 'Monk':
-        break;
-      case 'Paladin':
-        break;
-      case 'Ranger':
-        break;
-      case 'Rogue':
-        break;
-      case 'Sorcerer':
-        break;
-      case 'Warlock':
-        break;
-      case 'Wizard':
-        break;
-      case 'Custom':
-        break;
-      default:
-        console.log('getProficencies', this.props.character.charClass);
+    for(var c in Object.keys(this.props.proficencies)){
+      var listItem = Object.keys(this.props.proficencies)[c];
+      this[listItem].value = 0;
     }
   }
 
+  componentWillMount() {
+    console.log('CharacterStats componentWillMount');
+    var item = this.getProficencies();
+
+    console.log('CharacterStats componentWillReceiveProps', item);
+    this.setState({skillBonuses: item});
+  }
+
+  handleBonusChange(evt) {
+    var character = this.props.character;
+
+  }
+
+  getProficencies() {
+    console.log('getProficencies', this.props.character.charClass.name);
+    var skillBonuses = {};
+
+    switch (this.props.character.charClass.name) {
+      case 'Fighter':
+        skillBonuses = {
+          skillBonuses: {
+            type: ['acrobatics','animalhandling','athletics','history','insight','intimidation','perception','survival'],
+            limit:[1,2]
+          }
+        };
+        break;
+      case 'Barbarian':
+      skillBonuses = {
+          skillBonuses: {
+            type: ['animalhandling', 'athletics', 'intimidation', 'nature', 'perception', 'survival'],
+            limit: [1,2]
+          }
+        };
+        break;
+      case 'Bard':
+      skillBonuses = {
+          skillBonuses: {
+            type: Object.keys(this.state.skills),
+            limit: [1,2,3]
+          }
+        };
+        break;
+      case 'Cleric':
+      skillBonuses = {
+          skillBonuses: {
+            type: ['history', 'insight', 'medicine', 'persuasion', 'religion'],
+            limit: [1,2]
+          }
+        };
+        break;
+      case 'Druid':
+      skillBonuses = {
+          skillBonuses: {
+            type: ['arcana', 'animalhandling', 'insight', 'medicine', 'nature', 'preception', 'religion', 'survival'],
+            limit: [1,2]
+          }
+        };
+        break;
+      case 'Monk':
+      skillBonuses = {
+          skillBonuses: {
+            type: ['acrobatics', 'athletics', 'history', 'insight', 'religion', 'stealth'],
+            limit: [1,2]
+          }
+        };
+        break;
+      case 'Paladin':
+      skillBonuses = {
+          skillBonuses: {
+            type: ['athletics', 'insight', 'intimidation', 'medicine', 'persuasion', 'religion'],
+            limit: [1,2]
+          }
+        };
+        break;
+      case 'Ranger':
+      skillBonuses = {
+          skillBonuses: {
+            type: ['animalhandling', 'athletics', 'insight', 'investigation', 'nature', 'perception','stealth', 'survival'],
+            limit: [1,2,3]
+          }
+        };
+        break;
+      case 'Rogue':
+      skillBonuses = {
+          skillBonuses: {
+            type: ['acrobatics', 'athletics', 'deception', 'insight', 'intimidation', 'investigation', 'perception', 'performance', 'persuasion', 'sleightofhand', 'stealth'],
+            limit: [1,2,3,4]
+          }
+        };
+        break;
+      case 'Sorcerer':
+      skillBonuses = {
+          skillBonuses: {
+            type: ['arcana', 'deception', 'insight', 'intimidation', 'persuasion', 'religion'],
+            limit: [1,2]
+          }
+        };
+        break;
+      case 'Warlock':
+      skillBonuses = {
+          skillBonuses: {
+            type: ['arcana', 'deception', 'history', 'intimidation', 'investigation', 'nature', 'religion'],
+            limit: [1,2]
+          }
+        };
+        break;
+      case 'Wizard':
+      skillBonuses = {
+          skillBonuses: {
+            type: ['arcana', 'insight', 'history', 'medicine', 'investigation', 'religion'],
+            limit: [1,2]
+          }
+        };
+        break;
+      case 'Custom':
+      skillBonuses = {
+          skillBonuses: {
+            type: [],
+            limit: []
+          }
+        };
+        break;
+      default:
+        console.log('getProficencies', this.props.character.charClass.name, this.state.skillBonuses);
+    }
+
+    return skillBonuses.skillBonuses;
+    // this.setState({skillBonuses: skillBonuses.skillBonuses});
+  }
+
+  updateSkillBonuses(evt) {
+    console.log('updateSkillBonuses', evt.target.value);
+
+    for(var c in Object.keys(this.props.proficencies)){
+      var listItem = Object.keys(this.props.proficencies)[c];
+      //this[listItem].value = 0;
+    }
+
+    this[evt.target.value].value = (Number(this[evt.target.value].value) + Number(this.props.character.proficencyBonus));
+    this.updateValues.bind(this);
+  }
+
+  updateValues(){
+    console.log('updateValues',this);
+    var character = this.props.character;
+
+    for(var c in Object.keys(this.props.proficencies)){
+      var listItem = Object.keys(this.props.proficencies)[c];
+      character.skills[listItem] = this[listItem].value;
+    }
+
+    console.log('updateValues',character.skills);
+    this.props.updateCharacter(character);
+  }
+
   render() {
-    var raceBonuses = this.props.raceBonus.bonus;
+    console.log('render CharacterStats', this.props.character.charClass.name, this.state.skillBonuses);
+
+    var raceBonuses = this.props.character.savingThrows;
     const skills = Object.keys(this.props.proficencies);
 
-    let savingThrowsProps = Object.keys(this.props.savingThrows).map((item, i) => {
+    let abilityScoresProps = Object.keys(this.props.abilityScores).map((item, i) => {
       return {
         label: item + " " + (
           raceBonuses[item]
@@ -84,13 +218,29 @@ class CharacterStats extends Component {
           : ''),
         type: "number",
         bsClass: "form-control",
-        placeholder: this.props.savingThrows[item],
-        value: this.props.savingThrows[item],
+        placeholder: this.props.abilityScores[item],
+        value: this.props.abilityScores[item],
         inputRef: (ref) => {
           this[item] = ref
         }
       }
     });
+
+    let savingThrowsProps = Object.keys(this.props.character.savingThrows).map((item, i) => {
+      return <Col key={i} md={2}>
+        <label className='control-label'> {item} </label><br/>
+        <label className='value'> {this.props.character.savingThrows[item]} </label></Col>
+    });
+
+    let bonusList = this.state.skillBonuses.limit.map((item, i) => {
+      return <Col key={i} md={4}>
+    <DropDown
+    onChange={() => this.updateValues.bind(this)}
+    inputRef={ref => { this['Bonus'+Number(i+1)] = ref; }}
+    handleChange={() => this.updateSkillBonuses.bind(this)}
+    Items={this.state.skillBonuses.type} Title={'Bonus '+Number(i+1)}/></Col>
+  });
+
 
     let proficenciesList = Object.keys(this.props.proficencies).map((item, i) => {
       return {
@@ -98,8 +248,9 @@ class CharacterStats extends Component {
         type: "number",
         bsClass: "form-control",
         placeholder: this.props.proficencies[item],
+        onChange: this.updateValues.bind(this),
         inputRef: (ref) => {
-          this[item] = ref
+          this[item] = ref;
         }
       }
     });
@@ -108,8 +259,17 @@ class CharacterStats extends Component {
       <Grid fluid={true}>
         <Row>
           <Col md={12}>
-            <Card title="Edit Stats" content={<form > <ControlLabel>Saving Throws</ControlLabel>
+            <Card title="Edit Stats" content={<form>
 
+              <Row>
+                <ControlLabel>Saving Throws</ControlLabel>
+                <br/>
+                {savingThrowsProps}
+              </Row>
+
+              <hr/>
+
+              <ControlLabel>Ability Scores</ControlLabel>
               <FormInputs ncols={[
                   "col-md-2",
                   "col-md-2",
@@ -117,15 +277,21 @@ class CharacterStats extends Component {
                   "col-md-2",
                   "col-md-2",
                   "col-md-2"
-                ]} proprieties={savingThrowsProps}/>
+                ]} proprieties={abilityScoresProps}/>
 
-              <Button onClick={() => this.props.reRollSavingThrows()} bsStyle="info" pullRight={false} fill={true}>
+              <Button onClick={() => this.props.reRollAbilityScores()} bsStyle="info" pullRight={false} fill={true}>
                 <i className="fa fa-random"></i>
-                Re-roll Saving Throws
+                Re-roll Ability Scores
               </Button>
-
               <hr/>
 
+              <Row>
+                <ControlLabel>Proficency Bonus - {this.props.character.race + ' / ' + this.props.character.charClass.name} </ControlLabel>
+                <br/>
+                {bonusList}
+              </Row>
+
+              <hr/>
               <Row>
                 <ControlLabel>Proficencies</ControlLabel>
 
@@ -163,15 +329,23 @@ class CharacterStats extends Component {
               <Row>
                 <Col md={12}>
                   <FormInputs ncols={["col-md-4", "col-md-4", "col-md-4"]} proprieties={[
-                      proficenciesList[13], proficenciesList[14], proficenciesList[15]
+                      proficenciesList[12], proficenciesList[13], proficenciesList[14]
                     ]}/>
                 </Col>
               </Row>
 
               <Row>
                 <Col md={12}>
-                  <FormInputs ncols={["col-md-4", "col-md-4"]} proprieties={[
-                      proficenciesList[16], proficenciesList[17]
+                  <FormInputs ncols={["col-md-4", "col-md-4", "col-md-4"]} proprieties={[
+                      proficenciesList[15], proficenciesList[16], proficenciesList[17]
+                    ]}/>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col md={12}>
+                  <FormInputs ncols={["col-md-4"]} proprieties={[
+                      proficenciesList[18]
                     ]}/>
                 </Col>
               </Row>

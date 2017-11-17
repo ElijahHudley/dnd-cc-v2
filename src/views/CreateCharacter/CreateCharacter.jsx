@@ -37,10 +37,26 @@ class CreateCharacter extends Component {
     console.log('props', props);
     super(props);
 
+    this.charClassesInfo = {
+      'Barbarian':  {name:'Barbarian', armorClass: 13, hitPoints: 13, savingThrows: {'strength': 3, 'constitution': 1}},
+      'Bard':       {name:'Bard', armorClass: 13, hitPoints: 9, savingThrows: {'charisma': 3, 'dexterity': 1}},
+      'Cleric':     {name:'Cleric', armorClass: 14, hitPoints: 9, savingThrows: {'wisdom': 3, 'charisma': 1}},
+      'Druid':      {name:'Druid', armorClass: 13, hitPoints: 9, savingThrows: {'wisdom':3, 'intelligence': 1}},
+      'Fighter':    {name:'Fighter', armorClass: 12, hitPoints: 11, savingThrows: {'strength': 3, 'dexterity': 2, 'constitution': 1}},
+      'Monk':       {name:'Monk', armorClass: 12, hitPoints: 9, savingThrows: {'dexterity': 3, 'wisdom': 2, 'strength': 1}},
+      'Paladin':    {name:'Paladin', armorClass: 16, hitPoints: 11, savingThrows: {'wisdom': 1, 'strength': 2, 'charisma': 3}},
+      'Ranger':     {name:'Ranger', armorClass: 12, hitPoints: 11, savingThrows: {'dexterity': 2, 'strength': 1, 'wisdom': 2}},
+      'Rogue':      {name:'Rogue', armorClass: 13, hitPoints: 9, savingThrows: {'dexterity': 3, 'intelligence': 1}},
+      'Sorcerer':   {name:'Sorcerer', armorClass: 12, hitPoints: 7, savingThrows: {'charisma': 2, 'constitution': 1}},
+      'Warlock':    {name:'Warlock', armorClass: 13, hitPoints: 9, savingThrows: {'charisma': 3, 'wisdom': 1}},
+      'Wizard':     {name:'Wizard', armorClass: 12, hitPoints: 7, savingThrows: {'intelligence': 3, 'wisdom': 1}},
+      'Custom':     {name:'Custom', armorClass: '', hitPoints: '', savingThrows: {}}
+    }
+
     this.state = {
       character : {
       name: "Hiro Yakamora",
-      charClass: 'Barbarian',
+      charClass: this.charClassesInfo['Barbarian'],
       aliment: 'Lawful good',
       image: avatar,
       armorClass: 0,
@@ -67,6 +83,14 @@ class CreateCharacter extends Component {
         wisdom: 0,
         charisma: 0
       },
+      abilityScores: {
+        strength: 0,
+        dexterity: 0,
+        constitution: 0,
+        intelligence: 0,
+        wisdom: 0,
+        charisma: 0
+      },
       skills: {
         acrobatics: 0,
         athletics: 0,
@@ -86,27 +110,13 @@ class CreateCharacter extends Component {
         intimidation: 0,
         performance: 0,
         persuasion: 0
-        }
+      },
+      inventory: [],
+      abilities: []
       }
     };
 
     this.Name = this.state.character.name;
-
-    this.charClassesInfo = {
-      'Barbarian': {armorClass: 13, hitPoints: 13},
-      'Bard': {armorClass: 13, hitPoints: 9},
-      'Cleric': {armorClass: 14, hitPoints: 9},
-      'Druid': {armorClass: 13, hitPoints: 9},
-      'Fighter': {armorClass: 12, hitPoints: 11},
-      'Monk': {armorClass: 12, hitPoints: 9},
-      'Paladin': {armorClass: 16, hitPoints: 11},
-      'Ranger': {armorClass: 12, hitPoints: 11},
-      'Rogue': {armorClass: 13, hitPoints: 9},
-      'Sorcerer': {armorClass: 12, hitPoints: 7},
-      'Warlock': {armorClass: 13, hitPoints: 9},
-      'Wizard': {armorClass: 12, hitPoints: 7},
-      'Custom': {armorClass: '', hitPoints: ''}
-    }
 
     this.raceInfo = {
       'Dragonborn': {
@@ -195,47 +205,94 @@ class CreateCharacter extends Component {
     this.updateCharacter(character);
   }
 
+  reduceBeforeChangeSelect(type, selected){
+    //first see if you can subtract value so it doesnt get doubled
+    var savingThrows = this.state.character.savingThrows;
+    var item;
+
+    if(type === 'class'){
+      item = this.charClassesInfo;
+    } else {
+      item = this.raceInfo;
+    }
+
+    for(var c in Object.keys(savingThrows)){
+      var itemName = Object.keys(savingThrows)[c];
+      if(savingThrows[itemName] > 0 && selected !== undefined){
+
+        var stat = 0;
+        if(type === 'class'){
+          stat = item[selected].savingThrows[itemName];
+        } else {
+          stat = item[selected].bonus[itemName];
+        }
+
+        if(stat !== undefined){
+          savingThrows[itemName] -= stat;
+        }
+      }
+    }
+
+    return savingThrows;
+  }
+
   handleClassChange(evt) {
     var self = this;
-    var selected = evt.target.value;
+
+    var self = this;
     var character = this.state.character;
-    character.charClass = selected;
+    var savingThrows = this.reduceBeforeChangeSelect('class', this.previouslySelectedClass);
+
+    var selected = evt.target.value;
+    character.charClass = this.charClassesInfo[selected];
     character.armorClass = this.charClassesInfo[selected].armorClass;
     character.hitPoints = this.charClassesInfo[selected].hitPoints;
     console.log('handleClassChange', selected);
 
+    for(var c in Object.keys(this.charClassesInfo[selected].savingThrows)){
+      var itemName = Object.keys(this.charClassesInfo[selected].savingThrows)[c];
+      var stat = this.charClassesInfo[selected].savingThrows[itemName] || 0;
+      savingThrows[itemName] += stat;
+      character.savingThrows = savingThrows;
+    }
+
+    this.previouslySelectedClass = selected;
     this.updateCharacter(character);
   }
 
   handleRaceChange(evt) {
     var self = this;
-    var selected = evt.target.value;
     var character = this.state.character;
+    var savingThrows = this.reduceBeforeChangeSelect('race', this.previouslySelectedRace);
+
+    var selected = evt.target.value;
     character.race = selected;
     character.speed = this.raceInfo[selected].speed;
 
     console.log('handleRaceChange', selected);
 
-    var savingThrows = {
-      strength: 0,
-      dexterity: 0,
-      constitution: 0,
-      intelligence: 0,
-      wisdom: 0,
-      charisma: 0
-    }
-
     for(var c in Object.keys(this.raceInfo[selected].bonus)){
-      var index = Object.keys(this.raceInfo[selected].bonus)[c];
-      savingThrows[index] += this.raceInfo[selected].bonus[index];
+      var itemName = Object.keys(this.raceInfo[selected].bonus)[c];
+      var stat = this.raceInfo[selected].bonus[itemName] || 0;
+      savingThrows[itemName] += stat;
       character.savingThrows = savingThrows;
     }
 
-    this.updateCharacter(character);
+    var abilityName = Object.keys(this.raceInfo[selected].abilities[0])[0];
+    
+    character.abilities.push({
+      name: abilityName,
+      details: this.raceInfo[selected].abilities[0][abilityName],
+      index: character.abilities.length-1
+    });
+
+    this.previouslySelectedRace = selected;
+    this.updateCharacter(character.savingThrows);
   }
 
-  reRollSavingThrows(){
-    var bonuses = this.raceInfo[this.state.character.race].bonus;
+
+  reRollAbilityScores(){
+    var bonuses = this.state.character.savingThrows;
 
     function getCummTotal(){
       var die1 = Math.floor(Math.random() * (6 - 1) + 1);
@@ -261,19 +318,18 @@ class CreateCharacter extends Component {
       return cummTotal;
     }
 
-    var savingThrows = {
-      strength: getCummTotal() + (bonuses.strength ? bonuses.strength : 0),
-      dexterity: getCummTotal() + (bonuses.dexterity ? bonuses.dexterity : 0),
-      constitution: getCummTotal() + (bonuses.constitution ? bonuses.constitution : 0),
-      intelligence: getCummTotal() + (bonuses.intelligence ? bonuses.intelligence : 0),
-      wisdom: getCummTotal() + (bonuses.wisdom ? bonuses.wisdom : 0),
-      charisma: getCummTotal() + (bonuses.charisma ? bonuses.charisma : 0)
+    var abilityScores = {
+      strength: getCummTotal() + Number(bonuses.strength),
+      dexterity: getCummTotal() + Number(bonuses.dexterity),
+      constitution: getCummTotal() + Number(bonuses.constitution),
+      intelligence: getCummTotal() + Number(bonuses.intelligence),
+      wisdom: getCummTotal() + Number(bonuses.wisdom),
+      charisma: getCummTotal() + Number(bonuses.charisma)
     }
 
-    console.log('reRollSavingThrows', bonuses, savingThrows);
+    console.log('reRollAbilityScores', bonuses, abilityScores);
     var character = this.state.character;
-    character.savingThrows = savingThrows;
-
+    character.abilityScores = abilityScores;
     this.updateCharacter(character);
   }
 
@@ -281,29 +337,24 @@ class CreateCharacter extends Component {
     console.log('handleAlimentChange', evt.target.value);
     var character = this.state.character;
     character.aliment = evt.target.value;
-
     this.updateCharacter(character);
   }
 
   updateCharacter(character) {
     console.log('updateCharacter', character);
     var character = this.state.character;
-
     this.setState({character: character});
   }
 
   saveCharacter(ev) {
     console.log('updateCharacter', ev, this.refs);
     var character = this.state.character;
-
     this.setState({character: character});
   }
-
 
   handleInitiative(val){
     var character = this.state.character;
     character.initiative = val;
-
     this.updateCharacter(character);
   }
 
@@ -334,9 +385,10 @@ class CreateCharacter extends Component {
                 {<CharacterStats
                   character={this.state.character}
                   updateCharacter={(character) => this.updateCharacter(character)}
-                  reRollSavingThrows={() => this.reRollSavingThrows()}
+                  reRollAbilityScores={() => this.reRollAbilityScores()}
                   raceBonus={this.raceInfo[this.state.character.race]}
                   savingThrows={this.state.character.savingThrows}
+                  abilityScores={this.state.character.abilityScores}
                   proficencies={this.state.character.skills}/>}
               </Tab>
 
@@ -363,26 +415,30 @@ class CreateCharacter extends Component {
               setImage={(index) => this.setImage(index)}
               name={this.state.character.name}
               charClass={this.state.character.charClass}
+              race={this.state.character.race}
               aliment={this.state.character.aliment}
               armorClass={this.state.character.armorClass}
               initiative={this.state.character.initiative}
               speed={this.state.character.speed}
               hitPoints={this.state.character.hitPoints}
               proficencyBonus={this.state.character.proficencyBonus}
+
               description={<span> {this.state.character.backgroundStory} < /span>}
-              socials={<div > <Button simple="simple">
-                <i className="fa fa-facebook-square"></i>
-              </Button>
+              socials={
+                <div >
+                <Button simple="simple">
+                  <i className="fa fa-facebook-square"></i>
+                </Button>
 
-              <Button simple="simple">
-                <i className="fa fa-twitter"></i>
-              </Button>
+                <Button simple="simple">
+                  <i className="fa fa-twitter"></i>
+                </Button>
 
-              <Button simple="simple">
-                <i className="fa fa-google-plus-square"></i>
-              </Button>
-            </div>}/>
-          </Col>
+                <Button simple="simple">
+                  <i className="fa fa-google-plus-square"></i>
+                </Button>
+                </div>
+              }/></Col>
         </Row>
       </Grid>
     </div>);

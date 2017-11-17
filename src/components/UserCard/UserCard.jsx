@@ -57,7 +57,7 @@ export class UserCard extends Component{
                             <h4 className="title">
                                 {this.props.name}
                                 <br />
-                                <small>{this.props.aliment} / {this.props.charClass}</small>
+                                <small>{this.props.race} / {this.props.aliment} / {this.props.charClass.name}</small>
                             </h4>
                         </a>
                     </div>
@@ -84,6 +84,14 @@ export class UserCard extends Component{
                     <p className="description text-center">
                     <i className="fa fa-medkit" aria-hidden="true"></i>
                     &nbsp; Hit Points: {this.props.hitPoints}</p>
+
+                    <p className="description text-center">
+                    <i className="fa fa-circle" aria-hidden="true"></i>
+                    &nbsp; Primary Ability: {''}</p>
+
+                    <p className="description text-center">
+                    <i className="fa fa-circle-o" aria-hidden="true"></i>
+                    &nbsp; Secondary Abilities: {''}</p>
                 </div>
 
                 <hr />
