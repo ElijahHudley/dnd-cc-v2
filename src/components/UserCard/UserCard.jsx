@@ -45,6 +45,9 @@ export class UserCard extends Component{
 
 
     render(){
+      let abilities =  Object.keys(this.props.charClass.savingThrows).map((item, i) => {
+        return (<span data-index={i} key={i} title={"Details: " + item} value="select"> {item} </span>)
+      });
         return (
             <div className="card card-user">
                 <div className="image">
@@ -87,11 +90,8 @@ export class UserCard extends Component{
 
                     <p className="description text-center">
                     <i className="fa fa-circle" aria-hidden="true"></i>
-                    &nbsp; Primary Ability: {''}</p>
+                    &nbsp; Abilities: {abilities}</p>
 
-                    <p className="description text-center">
-                    <i className="fa fa-circle-o" aria-hidden="true"></i>
-                    &nbsp; Secondary Abilities: {''}</p>
                 </div>
 
                 <hr />

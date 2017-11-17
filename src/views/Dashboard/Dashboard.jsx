@@ -60,6 +60,11 @@ class Dashboard extends Component {
       this.props.history.push(`/Create`);
     }
 
+    OpenExistingCharacter(index){
+      console.log('OpenExistingCharacter', index);
+
+    }
+
     render() {
         return (
             <div className="content">
@@ -70,7 +75,7 @@ class Dashboard extends Component {
                             shouldHideBtn={true}
                             ClickEvent={() => this.HandleClickEvent()}
                             cardClass={"add-new"}
-                            name="Create New Character"
+                            name="New Character"
                             avatar={avatarTemp}
                             cardSmallIcon={<i className="fa fa-plus"></i>}
                             Save={() => this.updateCharacterList.bind(this)}/>
@@ -81,7 +86,7 @@ class Dashboard extends Component {
                             <Col lg={3} sm={6}>
                               <CharacterCard
                                 shouldHideBtn={false}
-                                ClickEvent={() => this.HandleClickEvent()}
+                                ClickEvent={(i) => this.OpenExistingCharacter(i)}
                                 cardText="Character"
                                 cardValue={i}
                                 name={item.name}

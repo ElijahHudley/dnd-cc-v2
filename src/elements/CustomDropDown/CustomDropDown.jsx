@@ -7,8 +7,18 @@ class CustomDropDown extends Component {
   constructor(props) {
     super(props);
 
+    var title = '';
+
+    if(this.props.Items[0] === ''){
+      if(this.props.Items[1] !== undefined){
+        title = this.props.Items[1];
+      }
+    }else{
+      title = this.props.Items[0];
+    }
+
     this.state = {
-      title: this.props.Items[0].name
+      title: title
     }
     this.handleSelect = this.handleSelect.bind(this);
     this.inputEl = 'select'
@@ -16,14 +26,22 @@ class CustomDropDown extends Component {
 
   handleSelect(evt){
     console.log('handleSelect', evt.target.value);
+
+    if(evt.target.value === ''){
+      return;
+    }
+
     this.setState({title:evt.target.value});
     this.props.handleChange();
   }
 
   render() {
-    let itemOptions = this.props.Items.map((item,i) => {
-      return<option key={i} id={i} value={item}>{item}</option>
-    })
+    var listItems = this.props.Items;
+    listItems.unshift('');
+
+    let itemOptions = listItems.map((item,i) => {
+      return <option key={i} id={i} value={item}>{item}</option>
+    });
 
     const {Title, Items} = this.props;
 

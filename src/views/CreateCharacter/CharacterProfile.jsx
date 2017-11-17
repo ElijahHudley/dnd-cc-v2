@@ -41,7 +41,7 @@ class CharacterProfile extends Component {
     character.story.bonds = this.Bonds.value;
     character.story.flaws = this.Flaws.value;
     character.story.personality = this.Personality.value;
- 
+
     console.log('updateValues', this.Personality.value)
     console.log('updateValues',this.Bonds.value)
     console.log('updateValues',this.Flaws.value)
@@ -134,6 +134,8 @@ class CharacterProfile extends Component {
                 onChange={() => this.updateValues.bind(this)}
                 inputRef={ref => { this.Aliment = ref; }}
                 handleChange={() => this.props.handleAlimentChange.bind(this)}
+                placeholder= {"Select"}
+
                 Items={aliments} Title="Aliment"/>
               </Col>
 
@@ -141,6 +143,7 @@ class CharacterProfile extends Component {
                 <DropDown
                 onChange={() => this.updateValues.bind(this)}
                 inputRef={ref => { this.Class = ref; }}
+                placeholder= {"Select"}
                 handleChange={() => this.props.handleClassChange.bind(this)} Items={classes} Title="Class"/>
               </Col>
 
@@ -148,6 +151,7 @@ class CharacterProfile extends Component {
                 <DropDown
                 onChange={() => this.updateValues.bind(this)}
                 inputRef={ref => { this.Race = ref; }}
+                placeholder= {"Select"}
                 handleChange={() => this.props.handleRaceChange.bind(this)} Items={races} Title="Race"/>
               </Col>
             </Row>
@@ -186,10 +190,6 @@ class CharacterProfile extends Component {
 
             <Button onClick={() => this.calcInitiative()} bsStyle="info" pullRight={false} fill={true}>
               <i className="fa fa-random"></i> Roll For initiative: {" " + this.props.initiative}
-            </Button>
-
-            <Button onClick={() => this.props.updateCharacter()} bsStyle="info" pullRight={true} fill={true} type="submit">
-            <i className="fa fa-save"></i> Update Profile
             </Button>
 
             <div className="clearfix"></div>

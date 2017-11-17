@@ -237,7 +237,9 @@ class CreateCharacter extends Component {
   }
 
   handleClassChange(evt) {
-    var self = this;
+    if(evt.target.value === ''){
+      return;
+    }
 
     var self = this;
     var character = this.state.character;
@@ -261,6 +263,10 @@ class CreateCharacter extends Component {
   }
 
   handleRaceChange(evt) {
+    if(evt.target.value === ''){
+      return;
+    }
+
     var self = this;
     var character = this.state.character;
     var savingThrows = this.reduceBeforeChangeSelect('race', this.previouslySelectedRace);
@@ -279,7 +285,7 @@ class CreateCharacter extends Component {
     }
 
     var abilityName = Object.keys(this.raceInfo[selected].abilities[0])[0];
-    
+
     character.abilities.push({
       name: abilityName,
       details: this.raceInfo[selected].abilities[0][abilityName],
@@ -346,10 +352,9 @@ class CreateCharacter extends Component {
     this.setState({character: character});
   }
 
-  saveCharacter(ev) {
-    console.log('updateCharacter', ev, this.refs);
-    var character = this.state.character;
-    this.setState({character: character});
+  saveAndExit(character){
+    this.props.history.push(`/Dashboard`);
+    this.updateCharacter(character);
   }
 
   handleInitiative(val){
@@ -404,6 +409,10 @@ class CreateCharacter extends Component {
                 updateCharacter={(character) => this.updateCharacter(character)}/>}
               </Tab>
             </Tabs>
+
+            <Button onClick={(character) => this.saveAndExit(this.state.character)} bsStyle="info" pullRight={true} fill={true} type="submit">
+            <i className="fa fa-save"></i> Save Character
+            </Button>
           </Col>
 
 
@@ -425,7 +434,7 @@ class CreateCharacter extends Component {
 
               description={<span> {this.state.character.backgroundStory} < /span>}
               socials={
-                <div >
+                <div>
                 <Button simple="simple">
                   <i className="fa fa-facebook-square"></i>
                 </Button>
@@ -437,10 +446,12 @@ class CreateCharacter extends Component {
                 <Button simple="simple">
                   <i className="fa fa-google-plus-square"></i>
                 </Button>
-                </div>
-              }/></Col>
+                </div>}
+              />
+          </Col>
         </Row>
       </Grid>
+
     </div>);
   }
 }

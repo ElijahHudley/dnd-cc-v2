@@ -33,22 +33,22 @@ export class CharacterCard extends Component{
                         </Col>
                         <Col xs={7}>
                             <div className="numbers">
-                            <h2>{this.props.name}</h2>
-                                <p>{this.props.charClass}</p>
+                            <h3 className="pullRight">{this.props.name}</h3>
+                                <p className="pullRight">{this.props.charClass}</p>
                             </div>
                         </Col>
                     </Row>
                     <div className="footer">
                         <hr />
                         <div className="stats">
-                            {this.props.cardSmallIcon}{" "}{this.props.cardIconText}
+                            {this.props.cardIconText}
 
-                            <Button className={this.hide} onClick={() => this.HandleClickEditEvent.bind(this)} bsSize="sm" bsStyle="info" pullRight={true} fill={true} type="submit">
-                              edit
+                            <Button className={this.hide + ' btn-fill btn btn-info'} onClick={() => this.HandleClickEditEvent.bind(this)} bsSize="sm" bsStyle="info" pullRight={true} fill={true} type="submit">
+                              EDIT
                             </Button>
 
-                            <Button className={this.hide} onClick={() => this.HandleClickDelEvent.bind(this)} bsSize="sm" bsStyle="info" pullRight={true} fill={true} type="submit">
-                              {'delete'}
+                            <Button className={this.hide + ' btn-fill btn btn-info'} onClick={() => this.HandleClickDelEvent.bind(this)} bsSize="sm" bsStyle="info" pullRight={true} fill={true} type="submit">
+                              DELETE
                             </Button>
                         </div>
                     </div>

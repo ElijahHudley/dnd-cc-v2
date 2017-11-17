@@ -79,7 +79,7 @@ class CharacterInventory extends Component {
                 <FormControl inputRef={(ref) => {console.log('ref', ref, this); this['invName'] = ref}} placeholder={'item'} bsClass={"form-control"} type={'text'} />
                 <br/>
 
-                <Button onClick={() => this.onClickAddItem()} bsStyle="info" pullRight={false} pullLeft={true}  fill={true}>
+                <Button onClick={() => this.onClickAddItem()} bsStyle="info" pullRight={false} fill={true}>
                   <i className="fa fa-arrow-right"></i>&nbsp; Add Item</Button>
               </Col>
 

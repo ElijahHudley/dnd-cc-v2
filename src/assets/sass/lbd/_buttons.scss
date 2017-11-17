@@ -2,7 +2,7 @@
     border-width: $border-thick;
     background-color: $transparent-bg;
     font-weight: $font-weight-normal;
-
+    margin: 0px 5px 0px;
     @include opacity(.8);
     padding: $padding-base-vertical $padding-base-horizontal;
 

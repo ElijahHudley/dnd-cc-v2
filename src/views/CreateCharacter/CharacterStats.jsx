@@ -47,9 +47,7 @@ class CharacterStats extends Component {
       var listItem = Object.keys(this.props.proficencies)[c];
       this[listItem].value = 0;
     }
-  }
 
-  componentWillMount() {
     console.log('CharacterStats componentWillMount');
     var item = this.getProficencies();
 
@@ -57,8 +55,7 @@ class CharacterStats extends Component {
     this.setState({skillBonuses: item});
   }
 
-  handleBonusChange(evt) {
-    var character = this.props.character;
+  componentWillMount() {
 
   }
 
