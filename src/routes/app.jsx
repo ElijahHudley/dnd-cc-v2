@@ -10,8 +10,8 @@ import CreateCharacter from 'views/CreateCharacter/CreateCharacter';
 //import Upgrade from 'views/Upgrade/Upgrade';
 
 const appRoutes = [
-    { path: "/dashboard", name: "Dashboard", icon: "pe-7s-graph", component: Dashboard },
-    { path: "/create", name: "Create New Character", icon: "pe-7s-user", component: CreateCharacter },
+  { path: "/dashboard", name: "Dashboard", icon: "pe-7s-graph", component: Dashboard},
+  { path: "/create", name: "Create New Character", icon: "pe-7s-user", data: {}, component: CreateCharacter},
     //{ path: "/table", name: "Table List", icon: "pe-7s-note2", component: TableList },
     //{ path: "/typography", name: "Typography", icon: "pe-7s-news-paper", component: Typography },
     //{ path: "/icons", name: "Icons", icon: "pe-7s-science", component: Icons },
@@ -20,5 +20,6 @@ const appRoutes = [
     //{ upgrade: true, path: "/upgrade", name: "Upgrade to PRO", icon: "pe-7s-rocket", component: Upgrade },
     { redirect: true, path:"/", to:"/dashboard", name: "Dashboard" }
 ];
+
 
 export default appRoutes;

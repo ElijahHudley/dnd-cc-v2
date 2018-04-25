@@ -11,17 +11,25 @@ import Sidebar from 'components/Sidebar/Sidebar';
 
 import {style} from "variables/Variables.jsx";
 import imagine from 'assets/img/bg.png';
+import Dashboard from 'views/Dashboard/Dashboard';
 
 import appRoutes from 'routes/app.jsx';
 
+
 class App extends Component {
     constructor(props){
-      console.log('props', props)
+      console.log('App props', props)
         super(props);
+
+        this.state = {
+          characters: []
+        }
+
         this.componentDidMount = this.componentDidMount.bind(this);
     }
 
     componentDidMount(){
+      console.log('APP !! componentDidMount', Object.keys(appRoutes), appRoutes);
     }
 
     componentDidUpdate(e){
@@ -29,11 +37,15 @@ class App extends Component {
             document.documentElement.classList.toggle('nav-open');
         }
     }
+
+    saveThis(){
+      console.log('HEY IM WALKING HERE!');
+    }
+
     render() {
       const Background = {
           backgroundImage: 'url(' + imagine + ')'
       };
-
 
         return (
                 <div className="wrapper">
@@ -43,14 +55,13 @@ class App extends Component {
                             <Switch>
                                 {
                                     appRoutes.map((prop,key) => {
-
-                                        if(prop.redirect)
-                                            return (
-                                                <Redirect from={prop.path} to={prop.to} key={key}/>
-                                            );
-                                        return (
-                                            <Route path={prop.path} component={prop.component} key={key}/>
-                                        );
+                                      console.log('appRoutes props', prop, key);
+                                        if(prop.name === '"Create New Character"'){
+                                          prop.component['data'] = 'NEW STUFF';
+                                        }
+                                        if(prop.redirect) return (<Redirect from={prop.path} to={prop.to} key={key}/>);
+                                        if(prop.name === 'Dashboard') return (<Route key={key} path={prop.path} render={(props) => <Dashboard {...props} characters={this.state.characters}/>} />);
+                                        return (<Route path={prop.path} component={prop.component} key={key}/>);
                                     })
                                 }
                             </Switch>

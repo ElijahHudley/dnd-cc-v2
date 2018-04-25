@@ -46,6 +46,14 @@ export class UserCard extends Component{
 
     render(){
       let abilities =  Object.keys(this.props.charClass.savingThrows).map((item, i) => {
+        
+        console.log('render abilities', abilities);
+          item = item.toUpperCase();
+
+        if(i !== Object.keys(this.props.charClass.savingThrows).length - 1){
+          item = item + ", ";
+        }
+
         return (<span data-index={i} key={i} title={"Details: " + item} value="select"> {item} </span>)
       });
         return (

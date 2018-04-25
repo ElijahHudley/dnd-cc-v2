@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Row, Col, Button } from 'react-bootstrap';
-import uuid from 'uuid/v4';
 
 export class CharacterCard extends Component{
     constructor(props){
@@ -23,17 +22,17 @@ export class CharacterCard extends Component{
 
     render(){
         return (
-            <div className={"card card-stats"}  onClick={() => this.props.ClickEvent()}>
+            <div className={"card card-stats"}  onClick={(character) => this.props.OpenExistingCharacter(this.props.character)}>
                 <div className={"content "  + this.props.cardClass}>
                     <Row>
                         <Col xs={5}>
-                            <div className={" image"}>
+                            <div className=" image">
                                 <img src={this.props.avatar} alt="..."/>
                             </div>
                         </Col>
                         <Col xs={7}>
                             <div className="numbers">
-                            <h3 className="pullRight">{this.props.name}</h3>
+                            <h3 className="pullRight card-text">{this.props.name}</h3>
                                 <p className="pullRight">{this.props.charClass}</p>
                             </div>
                         </Col>
@@ -43,11 +42,11 @@ export class CharacterCard extends Component{
                         <div className="stats">
                             {this.props.cardIconText}
 
-                            <Button className={this.hide + ' btn-fill btn btn-info'} onClick={() => this.HandleClickEditEvent.bind(this)} bsSize="sm" bsStyle="info" pullRight={true} fill={true} type="submit">
+                            <Button className={this.hide + ' btn-fill btn btn-info'} onClick={() => this.HandleClickEditEvent.bind(this)} bsSize="sm" bsStyle="info" fill={true} type="submit">
                               EDIT
                             </Button>
 
-                            <Button className={this.hide + ' btn-fill btn btn-info'} onClick={() => this.HandleClickDelEvent.bind(this)} bsSize="sm" bsStyle="info" pullRight={true} fill={true} type="submit">
+                            <Button className={this.hide + ' btn-fill btn btn-info'} onClick={() => this.HandleClickDelEvent.bind(this)} bsSize="sm" bsStyle="info" fill={true} type="submit">
                               DELETE
                             </Button>
                         </div>

@@ -10,6 +10,7 @@ import {
   Tabs,
   Tab
 } from 'react-bootstrap';
+import uuid from 'uuid/v4';
 
 import {Card} from 'components/Card/Card.jsx';
 import CharacterStats from './CharacterStats.jsx';
@@ -34,8 +35,12 @@ const images = importAll(require.context('assets/img/color', false, /\.(bmp|png|
 
 class CreateCharacter extends Component {
   constructor(props) {
-    console.log('props', props);
     super(props);
+
+    var self = this;
+    console.log('CreateCharacter ', this);
+    console.log('CreateCharacter props', this.props);
+    console.log('FROM LOCATION', this.props.location.state);
 
     this.charClassesInfo = {
       'Barbarian':  {name:'Barbarian', armorClass: 13, hitPoints: 13, savingThrows: {'strength': 3, 'constitution': 1}},
@@ -55,7 +60,8 @@ class CreateCharacter extends Component {
 
     this.state = {
       character : {
-      name: "Hiro Yakamora",
+      id: uuid(),
+      name: "placeholder",
       charClass: this.charClassesInfo['Barbarian'],
       aliment: 'Lawful good',
       image: avatar,
@@ -172,6 +178,11 @@ class CreateCharacter extends Component {
     }
   }
 
+  componentDidMount(){
+    //console.log('CreateCharacter componentDidMounthis', this);
+    //console.log('CreateCharacter componentDidMount props', this.props);
+  }
+
   setImage(index) {
     var character = this.state.character;
     character.image = images[index];
@@ -249,7 +260,6 @@ class CreateCharacter extends Component {
     character.charClass = this.charClassesInfo[selected];
     character.armorClass = this.charClassesInfo[selected].armorClass;
     character.hitPoints = this.charClassesInfo[selected].hitPoints;
-    console.log('handleClassChange', selected);
 
     for(var c in Object.keys(this.charClassesInfo[selected].savingThrows)){
       var itemName = Object.keys(this.charClassesInfo[selected].savingThrows)[c];
@@ -353,8 +363,13 @@ class CreateCharacter extends Component {
   }
 
   saveAndExit(character){
-    this.props.history.push(`/Dashboard`);
     this.updateCharacter(character);
+
+    this.props.history.push({
+      pathname: '/Dashboard',
+      search: '', //?query=abc
+      state: { character: character}
+    });
   }
 
   handleInitiative(val){
