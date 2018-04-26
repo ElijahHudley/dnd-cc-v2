@@ -1,0 +1,9 @@
+{
+    "database": {
+        "host": "localhost",
+        "user": "eli",
+        "pass": "jvdilla12",
+        "database": "CreatorDB",
+        "url": "localhost:5432/"
+    }
+}

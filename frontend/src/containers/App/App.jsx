@@ -22,15 +22,55 @@ class App extends Component {
         super(props);
 
         this.state = {
-          characters: []
+          characters: [],
+          response: ''
         }
 
         this.componentDidMount = this.componentDidMount.bind(this);
     }
+ 
+    async callApi(){
+      const response = await fetch('/api/createchar', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json"
+        },
+        body: JSON.stringify({text: 'adsfawefaf', complete: true})
+      }); 
+ 
+       const body = await response.json();
+       if (response.status !== 200) throw Error(body.message);
+ 
+        return body;
+    } 
+    
+    async callApiHello(){
+      const response = await fetch('/api/hello', {
+        method: 'get',
+        headers: {'Content-Type': 'application/json'},
+      }); 
+ 
+       const body = await response.json();
+       if (response.status !== 200) throw Error(body.message);
+ 
+        return body;
+    } 
 
     componentDidMount(){
-      console.log('APP !! componentDidMount', Object.keys(appRoutes), appRoutes);
-    }
+      console.log('APP Start!! componentDidMount', this.state, Object.keys(appRoutes), appRoutes);
+      var self = this;
+
+      this.callApi()
+      .then(function(res){
+        console.log('before callApi', res);
+        self.setState({ response: res })
+        console.log('APP then!! callApi', self.state);
+      })
+      .catch(function(err){
+        console.log('callApi APP SAY NO!', err); 
+      }); 
+    } 
 
     componentDidUpdate(e){
         if(window.innerWidth < 993 && e.history.location.pathname !== e.location.pathname && document.documentElement.className.indexOf('nav-open') !== -1){
