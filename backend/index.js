@@ -16,7 +16,14 @@ const dbConfig = configs.getDatabaseConfig();
 const db = database.init(dbConfig);
 
 const serverConfig = configs.getServerConfig();
-const appServer = server.init(serverConfig, db);
+const authConfig = configs.getAuthConfig();
+
+const conf = {
+     server: serverConfig,
+     auth: authConfig  
+}
+
+const appServer = server.init(conf, db);
 
 appServer.listen(process.env.PORT || serverConfig.port, () => {
     console.log('Server running at:', serverConfig.port);

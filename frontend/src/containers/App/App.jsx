@@ -45,31 +45,31 @@ class App extends Component {
         return body;
     } 
     
-    async callApiHello(){
-      const response = await fetch('/api/hello', {
-        method: 'get',
-        headers: {'Content-Type': 'application/json'},
-      }); 
+    // async callApiHello(){
+    //   const response = await fetch('/api/hello', {
+    //     method: 'get',
+    //     headers: {'Content-Type': 'application/json'},
+    //   }); 
  
-       const body = await response.json();
-       if (response.status !== 200) throw Error(body.message);
+    //    const body = await response.json();
+    //    if (response.status !== 200) throw Error(body.message);
  
-        return body;
-    } 
+    //     return body;
+    // } 
 
     componentDidMount(){
       console.log('APP Start!! componentDidMount', this.state, Object.keys(appRoutes), appRoutes);
       var self = this;
 
-      this.callApi()
-      .then(function(res){
-        console.log('before callApi', res);
-        self.setState({ response: res })
-        console.log('APP then!! callApi', self.state);
-      })
-      .catch(function(err){
-        console.log('callApi APP SAY NO!', err); 
-      }); 
+    //   this.callApi()
+    //   .then(function(res){
+    //     console.log('before callApi', res);
+    //     self.setState({ response: res })
+    //     console.log('APP then!! callApi', self.state);
+    //   })
+    //   .catch(function(err){
+    //     console.log('callApi APP SAY NO!', err); 
+    //   }); 
     } 
 
     componentDidUpdate(e){

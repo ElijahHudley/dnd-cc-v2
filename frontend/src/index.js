@@ -1,12 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {
-    HashRouter,
-    Route,
-    Switch
-} from 'react-router-dom';
+// import {HashRouter, browserHistory, Route, Switch} from 'react-router-dom';
+// import { Router, Route, browserHistory } from 'react-router';
 
+import { BrowserRouter, Link, Route } from 'react-router-dom';
 import App from 'containers/App/App.jsx';
 
 import './assets/css/bootstrap.min.css';
@@ -16,12 +14,10 @@ import './assets/css/demo.css';
 import './assets/css/pe-icon-7-stroke.css';
 
 
-
- 
 ReactDOM.render((
-    <HashRouter>
-        <Switch>
-            <Route path="/" name="Home" component={App}/>
-        </Switch>
-    </HashRouter>
+
+    <BrowserRouter>
+        <Route path="/" name="Home" component={App}/>
+    </BrowserRouter>
+
 ),document.getElementById('root'));

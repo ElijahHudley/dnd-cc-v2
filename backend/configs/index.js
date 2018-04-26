@@ -8,3 +8,7 @@ module.exports.getDatabaseConfig = function () {
 module.exports.getServerConfig = function () {
     return serverconfigs.server;
 }
+
+module.exports.getAuthConfig = function () {
+    return serverconfigs.auth;
+}
