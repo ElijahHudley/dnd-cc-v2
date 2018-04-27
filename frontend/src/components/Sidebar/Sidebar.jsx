@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import { NavLink } from 'react-router-dom';
 
+import { Router, Route, browserHistory } from 'react-router';
+
 import HeaderLinks from '../Header/HeaderLinks.jsx';
 
 import imagine from 'assets/img/sidebar-3.jpg';
@@ -14,6 +16,8 @@ class Sidebar extends Component{
         this.state = {
             width: window.innerWidth
         }
+
+        console.log('sidebar props!', props);
     }
     activeRoute(routeName) {
         return this.props.location.pathname.indexOf(routeName) > -1 ? 'active' : '';
@@ -26,6 +30,59 @@ class Sidebar extends Component{
         window.addEventListener("resize", this.updateDimensions.bind(this));
     }
 
+    openwindow(){
+        var self = this;
+        var childWindow = window.open('http://localhost:5000/auth/google','window name','menubar', 'width=800, height=600');
+        
+        var windowPoller=setInterval(function(){
+            //console.log('childwindow Open', childWindow, checkChildURL(childWindow)); 
+            try{
+                if(checkChildURL(childWindow).includes(window.location.hostname) || childWindow.closed){
+                    var url =   childWindow.document.URL;
+                    var acToken =   gup(url, 'access_token');
+                    var tokenType = gup(url, 'token_type');
+                    var expiresIn = gup(url, 'expires_in');
+                    var code = gup(url, 'code');
+                    
+                    console.log(url, acToken, tokenType, expiresIn, code);
+                    //self.props.loginRequest(code)
+                    myStopFunction();
+                }
+            }catch(e){
+              myStopFunction();  
+            } 
+        }, 200);
+
+        function myStopFunction() {
+            clearInterval(windowPoller);
+            setTimeout(function() {
+               childWindow.close();
+            }, 500); 
+        }
+
+        //credits: http://www.netlobo.com/url_query_string_javascript.html
+        function gup(url, name) {
+            name = name.replace(/[[]/,"\[").replace(/[]]/,"\]");
+            var regexS = "[\?&]"+name+"=([^&#]*)";
+            var regex = new RegExp( regexS );
+            var results = regex.exec( url );
+            if( results == null )
+                return "";
+            else
+                return results[1];
+        }
+
+        function checkChildURL(windowObject) {
+            var url = "error";
+            try {
+                url  = childWindow.location.href;
+            } catch(e) {
+                //nah
+            }
+            return url;
+        }
+    }
+ 
     render(){
         const sidebarBackground = {
             backgroundImage: 'url(' + imagine + ')'
@@ -61,6 +118,13 @@ class Sidebar extends Component{
                                 return null;
                             })
                         }
+{/* href={this.props.loginurl} */}
+                        <li className={"active active-pro loginbtn"} key={4}>
+                            <a className="nav-link active" onClick={() => this.openwindow()}> 
+                                <i className={"fa fa-google"}></i>
+                                <p>{'Login'}</p>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>

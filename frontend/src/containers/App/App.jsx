@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import {
-    Route,
-    Switch,
-    Redirect
-} from 'react-router-dom';
+import {Route, Switch, Redirect} from 'react-router-dom';
 
 import Header from 'components/Header/Header';
 import Footer from 'components/Footer/Footer';
 import Sidebar from 'components/Sidebar/Sidebar';
+import Button from 'elements/CustomButton/CustomButton.jsx';
 
 import {style} from "variables/Variables.jsx";
 import imagine from 'assets/img/bg.png';
@@ -18,58 +15,50 @@ import appRoutes from 'routes/app.jsx';
 
 class App extends Component {
     constructor(props){
-      console.log('App props', props)
         super(props);
 
         this.state = {
           characters: [],
-          response: ''
+          loginurl: ''
         }
 
+        //console.log('App props', props, this.state)
         this.componentDidMount = this.componentDidMount.bind(this);
     }
- 
-    async callApi(){
-      const response = await fetch('/api/createchar', {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json',
-            "Accept": "application/json"
-        },
-        body: JSON.stringify({text: 'adsfawefaf', complete: true})
-      }); 
- 
-       const body = await response.json();
-       if (response.status !== 200) throw Error(body.message);
+
+    async callApi(api){
+        const response = await fetch(api, {
+            method: 'get',
+            headers: {'Content-Type': 'application/json',
+                            'Accept': 'application/json'},
+        });
+
+        const body = await response.json();
+        if (response.status !== 200) throw Error(body.message);
  
         return body;
-    } 
-    
-    // async callApiHello(){
-    //   const response = await fetch('/api/hello', {
-    //     method: 'get',
-    //     headers: {'Content-Type': 'application/json'},
-    //   }); 
- 
-    //    const body = await response.json();
-    //    if (response.status !== 200) throw Error(body.message);
- 
-    //     return body;
-    // } 
+    }
 
-    componentDidMount(){
-      console.log('APP Start!! componentDidMount', this.state, Object.keys(appRoutes), appRoutes);
-      var self = this;
+    // loginRequest(code){
+    //     var self = this;
 
-    //   this.callApi()
+    //     this.callApi('/auth/google/callback')
     //   .then(function(res){
-    //     console.log('before callApi', res);
-    //     self.setState({ response: res })
-    //     console.log('APP then!! callApi', self.state);
+    //     self.setState({loginurl: res.url});
+    //     //console.log('before callApi', self.state.loginurl);
     //   })
     //   .catch(function(err){
     //     console.log('callApi APP SAY NO!', err); 
     //   }); 
+    // }
+     
+    componentDidMount(){
+        var self = this;
+        this.callApi('/api/getallchar').then(function(data){
+            console.log('got data', data);
+            self.setState({characters: [data]})
+        });
+        console.log('APP Start!! componentDidMount', this.state, Object.keys(appRoutes), appRoutes);
     } 
 
     componentDidUpdate(e){
@@ -89,22 +78,30 @@ class App extends Component {
 
         return (
                 <div className="wrapper">
-                    <Sidebar {...this.props} />
+                    <Sidebar {...this.props }  loginRequest={(code) => this.loginRequest(code)}/>
+
                     <div id="main-panel" className="main-panel" style={Background}>
                         <Header {...this.props}/>
-                            <Switch>
-                                {
-                                    appRoutes.map((prop,key) => {
-                                      console.log('appRoutes props', prop, key);
-                                        if(prop.name === '"Create New Character"'){
-                                          prop.component['data'] = 'NEW STUFF';
-                                        }
-                                        if(prop.redirect) return (<Redirect from={prop.path} to={prop.to} key={key}/>);
-                                        if(prop.name === 'Dashboard') return (<Route key={key} path={prop.path} render={(props) => <Dashboard {...props} characters={this.state.characters}/>} />);
-                                        return (<Route path={prop.path} component={prop.component} key={key}/>);
-                                    })
+
+                        <Switch>{
+                            appRoutes.map((prop,key) => {
+                                //console.log('appRoutes props', prop, key);
+                                if(prop.name === '"Create New Character"'){
+                                    prop.component['data'] = 'NEW STUFF';
                                 }
-                            </Switch>
+                                
+                                if(prop.redirect) {
+                                    return (<Redirect from={prop.path} to={prop.to} key={key}/>);
+                                }
+                                
+                                if(prop.name === 'Dashboard') {
+                                    return (<Route key={key} path={prop.path} render={(props) => <Dashboard {...props} characters={this.state.characters}/>}/>);
+                                }
+                                        
+                                return (<Route path={prop.path} component={prop.component} key={key}/>);
+                            })
+                        }</Switch>
+
                         <Footer />
                     </div>
                 </div>

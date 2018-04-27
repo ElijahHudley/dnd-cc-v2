@@ -1,74 +1,111 @@
 'use strict';
 
 const express = require('express');
+const request = require('request');
+//const uuidv4 = require('uuid/v4');
+
 const bodyParser = require("body-parser");
+
+const passport = require('passport');
 const session = require('express-session');
-const {google} = require('googleapis');
-const plus = google.plus('v1');
+
+const GoogleStrategy = require('passport-google-oauth20');
+const authRoutes = require('./authRoutes');
+
+
+//const session = require('express-session');
+//const {google} = require('googleapis');
 
 module.exports.init = function(configs, db){
-    const app = express();
+    const app = express(); 
 
-    //---------------------------------------- BEGIN GOOGLE ---------
-    const oauth2Client = new google.auth.OAuth2(
-        configs.auth.googleAuth.clientID,
-        configs.auth.googleAuth.clientSecret,
-        configs.auth.googleAuth.redirect_uris
-    );
-
-    google.options({ auth: oauth2Client });
-
-    // generate a url that asks permissions for Google+ and Google Calendar scopes
-    const scopes = ['https://www.googleapis.com/auth/plus.me'];
-    const url = oauth2Client.generateAuthUrl({
-        // 'online' (default) or 'offline' (gets refresh_token)
-        // If you only need one scope you can pass it as a string
-        access_type: 'offline',
-        scope: scopes
-    });
-
-    //using session in express
-    app.use(session({
-        secret: 'your-random-secret-19890913007',
-        resave: true,
-        saveUninitialized: true
-    }));
- 
-    app.use("/login", function (req, res) {
-        res.send(`<h1>Authentication using google oAuth</h1> 
-        <a href=${url}> Login </a>`);
-    });
-
-    app.use("/oauth2Callback", function (req, res) {
-        console.log('/oauth2Callback')
-
-        var session = req.session;
-        var code = req.query.code; // the query param code
-
-        oauth2Client.getToken(code, function(err, tokens) {
-            // Now tokens contains an access_token and an optional refresh_token. Save them.
-            if(!err) {
-                oauth2Client.setCredentials(tokens);
-                //saving the token to current session
-                session["tokens"]=tokens;
-                res.send(`<h3>Login successful!!</h3>
-                <a href="/details">Go to details page</a>`);
-            }
-            else{
-                res.send(`<h3>Login failed!!</h3>`);
-            }
-        });
-    });
- 
-    //---------------------------------------- END GOOGLE ---------
-
-    app.use(bodyParser.urlencoded({ extended: false }));
+    //app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
+
+    app.use(passport.initialize())
+    app.use(passport.session())
 
     app.use(function (err, req, res, next) {
         console.log(err);
         res.status(500).send(err);
     });
+
+    function insertDataIntoUser(profile){
+            var data = null;
+            db.connect();
+            
+            var insertQuery = db.query('INSERT INTO public.users (userid, email, name) VALUES ($1, $2, $3);',[profile.id.substring(1, 5), profile.displayName, profile.displayName], 
+            function(err, result){
+                console.log('INSERT err', err);
+                console.log('INSERT result',result);
+                //res.send({status: 'ok'});
+            });
+            
+
+            insertQuery.on('row', function(row) {
+                console.log('insertQuery row', row);
+                data = row;
+            });
+
+            insertQuery.on('end', function(row) {
+                console.log('insertQuery row', row);
+                data = row;
+                db.end();
+            });
+    }
+
+    function selectDataFromUsers(selector){
+        var data = null;
+        db.connect();
+        console.log('SELECT selectDataFromUsers', selector);
+
+        var selectQuery = db.query('SELECT * from public.users WHERE userid=' + selector, 
+            function(err, result){
+                console.log('SELECT err', err);
+                console.log('SELECT result',result);
+                //res.send({status: 'ok'});
+            });
+
+            selectQuery.on('row', function(row) {
+                console.log('row', row);
+                data = row;
+                
+                if(data === null){
+                    console.log('data', data);
+                }else{
+                    console.log('data', data);
+                } 
+            });
+
+            selectQuery.on('end', function() {
+                console.log('row end', data);
+                data = 'none';
+                db.end();
+            });
+    }
+
+    //---------------------------------------- BEGIN GOOGLE ---------
+    
+    // Use the GoogleStrategy within Passport.
+    //   Strategies in passport require a `verify` function, which accept
+    //   credentials (in this case, a token, tokenSecret, and Google profile), and
+    //   invoke a callback with a user object.
+    
+    passport.use(new GoogleStrategy({
+            clientID: configs.auth.googleAuth.clientID,
+            clientSecret: configs.auth.googleAuth.clientSecret,
+            callbackURL: configs.auth.googleAuth.redirect_uris
+        },
+        function(accessToken, refreshToken, profile, done) {
+           selectDataFromUsers(profile.id.substring(1, 5));
+           console.log(done);
+        }
+    ));
+
+
+
+    app.use('/auth', authRoutes);
+    //---------------------------------------- END GOOGLE ---------
 
     //add route setup here!
     app.get('/api/hello', (req, res) => {
@@ -90,24 +127,42 @@ module.exports.init = function(configs, db){
         query.on('row', function(row) {
             console.log('row', row);
         });
-        
+         
         query.on('end', function() {
             console.log('row end');
             db.end();
         });
-
+    
     });
 
     //get character based on userid
     app.post('/api/getchar', (req, res) => {
         console.log(req);
-        res.send({}); 
+
+        
     }); 
 
     //get all characters
     app.get('/api/getallchar', (req, res) => {
         console.log(req);
-        res.send({}); 
+        db.connect(); 
+          
+        var query = db.query('SELECT * from public.characters', 
+        function(err, result){
+                console.log('SELECT err', err);
+                console.log('SELECT result',result);
+                //res.send({status: 'ok'});
+            });
+
+        query.on('row', function(row) {
+            console.log('row', row);
+            res.send(row);
+        });
+        
+        query.on('end', function() {
+            console.log('row end');
+            db.end();
+        }); 
     });
 
     //update the character based on userid

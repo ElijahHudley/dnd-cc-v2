@@ -4,7 +4,15 @@
         > a:focus{
             background-color: transparent;
         }
+
     }
+
+    > li > .loginbtn {
+        bottom: 0;
+        position: absolute;
+        width: 100%;
+    }
+
 }
 .navbar{
     border: $none;

@@ -12,6 +12,10 @@ import CreateCharacter from 'views/CreateCharacter/CreateCharacter';
 const appRoutes = [
   { path: "/dashboard", name: "Dashboard", icon: "pe-7s-graph", component: Dashboard},
   { path: "/create", name: "Create New Character", icon: "pe-7s-user", data: {}, component: CreateCharacter},
+  { path: "/user", name: "User", icon: "fa fa-user-o", data: {}, component: UserProfile},
+  
+  //{ path: "/login", name: "Login", icon: "fa fa-google", data: {}, component: null},
+
     //{ path: "/table", name: "Table List", icon: "pe-7s-note2", component: TableList },
     //{ path: "/typography", name: "Typography", icon: "pe-7s-news-paper", component: Typography },
     //{ path: "/icons", name: "Icons", icon: "pe-7s-science", component: Icons },

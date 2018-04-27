@@ -27,7 +27,7 @@ export class CharacterCard extends Component{
                     <Row>
                         <Col xs={5}>
                             <div className=" image">
-                                <img src={this.props.avatar} alt="..."/>
+                                {/* <img src={this.props.avatar} alt="..."/> */}
                             </div>
                         </Col>
                         <Col xs={7}>

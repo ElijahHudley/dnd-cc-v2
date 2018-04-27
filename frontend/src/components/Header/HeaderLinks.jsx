@@ -1,9 +1,14 @@
 import React, {Component} from 'react';
-import { NavItem, Nav, NavDropdown, MenuItem } from 'react-bootstrap';
+import { NavItem, Nav, NavLink, NavDropdown, MenuItem } from 'react-bootstrap';
+import Button from 'elements/CustomButton/CustomButton.jsx';
 
+import loginDark from "assets/img/svg/btn_google_dark_normal_ios.svg";
+import loginLight from "assets/img/svg/btn_google_light_normal_ios.svg";
 
-class HeaderLinks extends Component{
+class HeaderLinks extends Component{ 
     render(){
+        console.log('loginDark', loginDark)
+
         const notification = (
             <div>
                 <i className="fa fa-globe"></i>
@@ -45,8 +50,9 @@ class HeaderLinks extends Component{
                 */}
                 <Nav pullRight>
                     <NavItem eventKey={1} href="#">Account</NavItem>
-                    <NavItem eventKey={3} href="#">Log out</NavItem>
+                    <NavItem eventKey={2} href="#">Login</NavItem>
                 </Nav>
+
             </div>
         );
     }
