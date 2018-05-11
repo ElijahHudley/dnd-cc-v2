@@ -12,7 +12,6 @@ const session = require('express-session');
 const GoogleStrategy = require('passport-google-oauth20');
 const authRoutes = require('./authRoutes');
 
-
 //const session = require('express-session');
 //const {google} = require('googleapis');
 
@@ -132,8 +131,8 @@ module.exports.init = function(configs, db){
             console.log('row end');
             db.end();
         });
-    
-    });
+      
+     });
 
     //get character based on userid
     app.post('/api/getchar', (req, res) => {
@@ -144,25 +143,33 @@ module.exports.init = function(configs, db){
 
     //get all characters
     app.get('/api/getallchar', (req, res) => {
-        console.log(req);
-        db.connect(); 
-          
-        var query = db.query('SELECT * from public.characters', 
-        function(err, result){
-                console.log('SELECT err', err);
-                console.log('SELECT result',result);
-                //res.send({status: 'ok'});
-            });
 
-        query.on('row', function(row) {
-            console.log('row', row);
-            res.send(row);
+        db.connect(function (err, client, done) {
+
+            if (err) {
+                console.error('Error connecting to pg server' + err.stack);
+                callback(err);
+            } else {
+                console.log('Connection established with pg db server');
+                client.query('SELECT * from public.characters', (err, results) => {
+    
+                    if (err) {
+                        console.error('Error executing query on pg db' + err.stack);
+                        callback(err);
+                    } else {
+                        console.log('Got query results : ' + results.rows.length);
+                        res.send(results.rows);
+                    }
+    
+                    client.release();
+                    db.end();
+                    
+                    console.log('Ending getallchar at ' + new Date());
+                });
+            }
+    
         });
-        
-        query.on('end', function() {
-            console.log('row end');
-            db.end();
-        }); 
+
     });
 
     //update the character based on userid
