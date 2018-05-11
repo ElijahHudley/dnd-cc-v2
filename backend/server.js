@@ -162,12 +162,11 @@ module.exports.init = function(configs, db){
                     }
     
                     client.release();
-                    db.end();
+                    //db.end();
                     
                     console.log('Ending getallchar at ' + new Date());
                 });
             }
-    
         });
 
     });

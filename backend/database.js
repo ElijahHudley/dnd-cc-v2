@@ -35,7 +35,7 @@ module.exports.init = function (configs) {
                 }
 
                 client.release();
-                pool.end();
+                //pool.end();
                 
                 console.log('Ending lambda at ' + new Date());
             });
