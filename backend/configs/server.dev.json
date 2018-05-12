@@ -10,7 +10,7 @@
         "googleAuth" : {
             "clientID"     : "284075597716-k220p5fkbf11kr9ha02hras7ht2f6urf.apps.googleusercontent.com",
             "clientSecret"  : "F20_mvxgGyx0-6_He2ZOYAGu",
-            "redirect_uris": "http://localhost:3000/user",
+            "redirect_uris": "http://localhost:5000/auth/google/callback",
             "auth_uri": "https://accounts.google.com/o/oauth2/auth",
             "token_uri": "https://accounts.google.com/o/oauth2/token"
         }

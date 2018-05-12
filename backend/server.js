@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
 
 module.exports.init = function (configs, db) {
-    auth(passport, configs);
+    auth(passport, configs, db);
     app.use(passport.initialize());
 
     app.use(cookieSession({
@@ -52,7 +52,7 @@ module.exports.init = function (configs, db) {
     app.get('/auth/google/callback',
         passport.authenticate('google', {
             failureRedirect: '/',
-            successRedirect: '/user'
+            successRedirect: '/auth/user'
         }),
         (req, res) => {
             console.log('req.user.token', req.user.token);
@@ -60,6 +60,12 @@ module.exports.init = function (configs, db) {
             res.redirect('/');
         }
     );
+
+    app.get('/auth/user', (req, res) => {
+        res.send({expressstuff: 'port', whatwhat: 'what'}); 
+ 
+
+    });      
 
     return app;
 };
