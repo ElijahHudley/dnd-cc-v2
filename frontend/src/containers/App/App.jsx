@@ -54,10 +54,10 @@ class App extends Component {
      
     componentDidMount(){
         var self = this;
-        this.callApi('/api/getallchar').then(function(data){
-            console.log('got data', data);
-            self.setState({characters: [data]})
-        });
+        // this.callApi('/api/getallchar').then(function(data){
+        //     console.log('got data', data);
+        //     self.setState({characters: [data]})
+        // });
         console.log('APP Start!! componentDidMount', this.state, Object.keys(appRoutes), appRoutes);
     } 
 

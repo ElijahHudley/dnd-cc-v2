@@ -15,16 +15,12 @@ process.on('unhandledRejection', (reason) => {
 const dbConfig = configs.getDatabaseConfig();
 const db = database.init(dbConfig);
 
-const serverConfig = configs.getServerConfig();
-const authConfig = configs.getAuthConfig();
-
 const conf = {
-     server: serverConfig,
-     auth: authConfig  
+     server: configs.getServerConfig(),
+     auth: configs.getAuthConfig()  
 }
-
 const appServer = server.init(conf, db);
 
-appServer.listen(process.env.PORT || serverConfig.port, () => {
-    console.log('Server running at:', serverConfig.port);
+appServer.listen(process.env.PORT || conf.server.port, () => {
+    console.log('Server running at:', conf.server.port);
 });
