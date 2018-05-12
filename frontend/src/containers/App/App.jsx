@@ -57,11 +57,8 @@ class App extends Component {
         this.callApi('/api/getallchar').then(function(data){
             console.log('got data', data);
             self.setState({characters: [data]})
-        }).then(function(data){
-            console.log('APP Start!! componentDidMount', self.state);
         });
-        
-        console.log('APP Start!! componentDidMount', this.state);
+        console.log('APP Start!! componentDidMount', this.state, Object.keys(appRoutes), appRoutes);
     } 
 
     componentDidUpdate(e){

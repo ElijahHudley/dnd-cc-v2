@@ -34,7 +34,6 @@ class Dashboard extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log('component updated!');
     if (this.props.location !== prevProps.location) {
       this.onRouteChanged();
     }
@@ -61,6 +60,7 @@ class Dashboard extends Component {
   componentWillMount(){
     console.log('CHECKING TO SEE IF DASHBOARD componentWillMount', this.props.location);
 
+
     this.updateCharacterList.bind(this);
     console.log('Dashboard props', this);
   }
@@ -73,7 +73,7 @@ class Dashboard extends Component {
     // }
   }
 
-  updateCharacterList(character){
+    updateCharacterList(character){
       var characters = this.state.characters;
       var found = false;
 
@@ -92,7 +92,7 @@ class Dashboard extends Component {
       console.log('updateCharacterList', character.id, characters);
       this.setState({characters: characters});
       this.forceUpdate();
-  }
+    }
 
     forceUpdate(callback){
       console.log('forceUpdate');

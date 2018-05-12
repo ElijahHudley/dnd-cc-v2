@@ -1,6 +1,7 @@
-const pg = require('pg');
+const pg = require('pg');``
 
 module.exports.init = function (configs) {
+<<<<<<< HEAD
 
     let dbConfig = {
         user: configs.user,
@@ -45,4 +46,15 @@ module.exports.init = function (configs) {
 
     return new pg.Pool(dbConfig);
 };
+=======
+    const user = configs.user;
+    const pass = configs.pass;
+    const url = configs.url;
+    const database = configs.database;
+
+    const connectionString = `postgres://${user}:${pass}@${url}${database}`;
+    
+    return new pg.Client(connectionString);
+}; 
+>>>>>>> parent of 90e7203... used pool instead of client
 

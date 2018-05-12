@@ -1,5 +1,7 @@
 import Dashboard from 'views/Dashboard/Dashboard';
 import UserProfile from 'views/UserProfile/UserProfile';
+import login from 'views/UserProfile/login';
+
 import CreateCharacter from 'views/CreateCharacter/CreateCharacter';
 
 //import TableList from 'views/TableList/TableList';
@@ -13,7 +15,8 @@ const appRoutes = [
   { path: "/dashboard", name: "Dashboard", icon: "pe-7s-graph", component: Dashboard},
   { path: "/create", name: "Create New Character", icon: "pe-7s-user", data: {}, component: CreateCharacter},
   { path: "/user", name: "User", icon: "fa fa-user-o", data: {}, component: UserProfile},
-  
+  { path: "/auth/google", name: "User", icon: "fa fa-user-o", data: {}, component: login},
+
   //{ path: "/login", name: "Login", icon: "fa fa-google", data: {}, component: null},
 
     //{ path: "/table", name: "Table List", icon: "pe-7s-note2", component: TableList },
