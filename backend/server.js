@@ -2,21 +2,21 @@ const express = require('express');
 const app = express();
 const passport = require('passport');
 const auth = require('./auth');
-const cookieParser = require('cookie-parser');
-const cookieSession = require('cookie-session');
+var session = require('express-session');
 
 module.exports.init = function (configs, db) {
     auth(passport, configs, db);
-    app.use(passport.initialize());
-
-    app.use(cookieSession({
-        name: 'session',
-        keys: ['SECRECT KEY'],
-        maxAge: 24 * 60 * 60 * 1000
+    
+    // required for passport session
+    app.use(session({
+        secret: 'secrettexthere',
+        saveUninitialized: true,
+        resave: true
     }));
 
-    app.use(cookieParser());
-
+    app.use(passport.initialize());
+    app.use(passport.session());
+    
     app.use(function (err, req, res, next) {
         console.log(err);
         res.status(500).send(err);
@@ -44,28 +44,43 @@ module.exports.init = function (configs, db) {
 
     app.get('/auth/google', passport.authenticate('google', {
         scope: ['https://www.googleapis.com/auth/userinfo.profile']
-    }), (req, res) => {
-        console.log('req.query', req.query);
-        res.send({code: req.query.code});
-    });
+    })
+        // , (req, res) => {
+        //     console.log('req.query', req.query);
+        //     res.send({ code: req.query.code });
+        // }
+    );
 
     app.get('/auth/google/callback',
         passport.authenticate('google', {
-            failureRedirect: '/',
+            failureRedirect: '/auth/fail',
             successRedirect: '/auth/user'
-        }),
-        (req, res) => {
-            console.log('req.user.token', req.user.token);
-            req.session.token = req.user.token;
-            res.redirect('/');
-        }
+        })
+        // ,(req, res) => {
+        //     console.log('req.user.token', req.user.token);
+        //     req.session.token = req.user.token;
+        //     res.redirect('/');
+        // }
     );
 
-    app.get('/auth/user', (req, res) => {
-        res.send({expressstuff: 'port', whatwhat: 'what'}); 
- 
+    app.get('/auth/user', isLoggedIn, (req, res) => {
+        res.send({ expressstuff: 'port', whatwhat: req.user });
+    });
 
-    });      
+    app.get('/auth/fail', (req, res) => {
+        res.send({ expressstuff: 'FAILED TO LOGIN', whatwhat: req.user });
+    });
 
     return app;
 };
+
+// route middleware to make sure a user is logged in
+function isLoggedIn(req, res, next) {
+    console.log('\n isLoggedIn', req.isAuthenticated());
+    // if user is authenticated in the session, carry on
+    if (req.isAuthenticated())
+        return next();
+
+    // if they aren't redirect them to the home page
+    res.redirect('/auth/fail');
+}

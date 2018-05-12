@@ -19,6 +19,7 @@ const conf = {
      server: configs.getServerConfig(),
      auth: configs.getAuthConfig()  
 }
+
 const appServer = server.init(conf, db);
 
 appServer.listen(process.env.PORT || conf.server.port, () => {
