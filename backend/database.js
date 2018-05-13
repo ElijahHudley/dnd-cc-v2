@@ -36,7 +36,7 @@ module.exports.init = function (configs) {
 
                 client.release();
                 
-                console.log('Ending lambda at ' + new Date(), '\n');
+                console.log('\n', 'Ending lambda at ' + new Date(), '\n');
             });
         }
 

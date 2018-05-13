@@ -15,7 +15,7 @@ const appRoutes = [
   { path: "/dashboard", name: "Dashboard", icon: "pe-7s-graph", component: Dashboard},
   { path: "/create", name: "Create New Character", icon: "pe-7s-user", data: {}, component: CreateCharacter},
   { path: "/user", name: "User", icon: "fa fa-user-o", data: {}, component: UserProfile},
-  { path: "/auth/google", name: "User", icon: "fa fa-user-o", data: {}, component: login},
+  { path: "/test", name: "test", icon: "fa fa-user-o", data: {}, component: login},
 
   //{ path: "/login", name: "Login", icon: "fa fa-google", data: {}, component: null},
 

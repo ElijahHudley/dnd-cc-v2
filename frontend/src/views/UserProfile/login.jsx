@@ -29,7 +29,7 @@ class UserProfile extends Component {
        console.log('clickbtn');
        var self = this;
 
-       self.callApi('/auth/google').then(function(data){
+       self.callApi('/api/hello').then(function(data){
             console.log('got data', data);
         }).then(function(data){
             console.log('APP Start!! componentDidMount', self.state);

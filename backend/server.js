@@ -1,12 +1,12 @@
 const express = require('express');
-const app = express();
 const passport = require('passport');
 const auth = require('./auth');
 var session = require('express-session');
 
 module.exports.init = function (configs, db) {
+    const app = express();
     auth(passport, configs, db);
-    
+
     // required for passport session
     app.use(session({
         secret: 'secrettexthere',
@@ -18,9 +18,24 @@ module.exports.init = function (configs, db) {
     app.use(passport.session());
     
     app.use(function (err, req, res, next) {
-        console.log(err);
+        console.log('\n error!'); 
+        console.log('\n error!', err); 
         res.status(500).send(err);
+        // next(err);
     });
+
+    // route middleware to make sure a user is logged in
+    function isLoggedIn(req, res, next) {
+        console.log('\n IS USER LOGGED IN!!!', req.isAuthenticated());
+
+        // if user is authenticated in the session, carry on
+        if (req.isAuthenticated()) {
+            return next();
+        }
+
+        // if they aren't redirect them to the home page
+        res.redirect('/auth/fail');
+    }
 
     app.get('/', (req, res) => {
         if (req.session.token) {
@@ -56,31 +71,28 @@ module.exports.init = function (configs, db) {
             failureRedirect: '/auth/fail',
             successRedirect: '/auth/user'
         })
-        // ,(req, res) => {
+        // , (req, res) => {
         //     console.log('req.user.token', req.user.token);
         //     req.session.token = req.user.token;
-        //     res.redirect('/');
+        //     res.redirect('http://localhost:3000/user');
         // }
     );
 
     app.get('/auth/user', isLoggedIn, (req, res) => {
-        res.send({ expressstuff: 'port', whatwhat: req.user });
+        console.log('\n GET LOGGED IN USER!!!');
+        res.send({expressstuff: 'LOGGED IN ' , whatwhat: 'what'}); 
+
     });
 
     app.get('/auth/fail', (req, res) => {
+        console.log('\n USER Failed TO LOG IN!!!');
         res.send({ expressstuff: 'FAILED TO LOGIN', whatwhat: req.user });
+    });
+
+    app.get('/api/hello', (req, res) => {
+        console.log('\n hello!!!');
+        res.send({expressstuff: 'port', whatwhat: 'what'}); 
     });
 
     return app;
 };
-
-// route middleware to make sure a user is logged in
-function isLoggedIn(req, res, next) {
-    console.log('\n isLoggedIn', req.isAuthenticated());
-    // if user is authenticated in the session, carry on
-    if (req.isAuthenticated())
-        return next();
-
-    // if they aren't redirect them to the home page
-    res.redirect('/auth/fail');
-}
