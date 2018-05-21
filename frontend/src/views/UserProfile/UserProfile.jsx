@@ -12,6 +12,44 @@ import Button from 'elements/CustomButton/CustomButton.jsx';
 import avatar from "assets/img/faces/face-3.jpg";
 
 class UserProfile extends Component {
+    getCookie(name) {
+        var value = "; " + document.cookie;
+        var parts = value.split("; " + name + "=");
+        if (parts.length == 2) return parts.pop().split(";").shift();
+    }
+
+    async callApi(api){
+        var self = this;
+
+        const response = await fetch(api, { 
+            method: 'get',
+            headers: {'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                        'token': self.getCookie('token')},
+            body: {data: "SGESWbvegtweg"}
+        });
+
+        const body = await response
+        
+        // if (response.status !== 200) {
+        //     throw Error(body.message)
+        // }
+ 
+        return body;
+    }
+
+    componentDidMount(){
+       console.log('componentDidMount');
+       console.log('componentDidMount', this.props.location, this.props);
+
+       var self = this;
+       self.callApi('/auth/getuser').then(function(data){
+            console.log('got data', data);
+        }).then(function(data){
+            console.log('APP Start!! componentDidMount', self.state);
+        });
+    }
+
     render() {
         return (
             <div className="content">

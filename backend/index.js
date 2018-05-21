@@ -24,4 +24,5 @@ const appServer = server.init(conf, db);
 
 appServer.listen(process.env.PORT || conf.server.port, () => {
     console.log('Server running at:', conf.server.port);
+    
 });

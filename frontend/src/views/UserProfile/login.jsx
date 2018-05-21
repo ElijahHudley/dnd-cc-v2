@@ -13,11 +13,14 @@ import avatar from "assets/img/faces/face-3.jpg";
 
 class UserProfile extends Component {
     async callApi(api){
+        var self = this;
+
         const response = await fetch(api, {
             method: 'get',
             headers: {'Content-Type': 'application/json',
                             'Accept': 'application/json'},
-        });
+            data: {userid: this.props.location.query.id}
+        }); 
 
         const body = await response.json();
         if (response.status !== 200) throw Error(body.message);
@@ -27,6 +30,8 @@ class UserProfile extends Component {
 
     clickbtn(ev){
        console.log('clickbtn');
+       console.log('location', this.props.location);
+
        var self = this;
 
        self.callApi('/api/hello').then(function(data){

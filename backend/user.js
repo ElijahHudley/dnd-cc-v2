@@ -2,12 +2,15 @@
 function UserModel(db) {
 
     this.google = {
-        id           : String,
+        userid       : String,
         token        : String,
-        name         : String
+        name         : String,
+        email        : String
     }
 
     this.setUser = function(profile, callback){
+        console.log('this.setUser', profile);
+
         db.connect(function (err, client, done) {
 
             if (err) {
@@ -15,7 +18,7 @@ function UserModel(db) {
                 callback(null, err);
             } else {
                 console.log('setUser Connection established with pg db server');
-                client.query('INSERT INTO public.userprofiles (userid, token, name) VALUES ($1, $2, $3);', [profile.google.id, profile.google.token, profile.google.name], (err, res) => {
+                client.query('INSERT INTO public.userprofiles (userid, token, name, email, created) VALUES ($1, $2, $3, $4, $5);', [profile.google.userid, profile.google.token, profile.google.name, profile.google.email, new Date()], (err, res) => {
     
                     if (err) {
                         console.error('Error executing query on pg db' + err.stack);
@@ -32,14 +35,16 @@ function UserModel(db) {
         });
     }
 
-    this.getUser = function(id, callback){
+    this.getUser = function(userid, callback){
+        console.log('this.getUser', userid);
+
         db.connect(function (err, client, done) {
             if (err) {
                 console.error('Error connecting to pg server' + err.stack);
                 callback(null, err);
             } else {
                 console.log('getUser Connection established with pg db server');
-                client.query('SELECT * from public.userprofiles where userid = $1', [id], (err, res) => {
+                client.query('SELECT * from public.userprofiles where userid = $1', [userid], (err, res) => {
     
                     if (err) {
                         console.error('Error executing query on pg db' + err.stack);

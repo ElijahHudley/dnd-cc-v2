@@ -42,5 +42,5 @@ module.exports.init = function (configs) {
 
     });
 
-    return new pg.Pool(dbConfig);
+    return pool;
 };
